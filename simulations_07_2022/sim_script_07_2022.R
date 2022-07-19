@@ -27,40 +27,43 @@ scenario_i_alpha <- data.frame(num_arms = 2,
   mutate(timetrend = ifelse(lambda0==lambda1 & lambda1==lambda2, "EQ", "DIFF"),
          hypothesis = ifelse(theta2==0, "H0", "H1"))
 
-results_i_alpha <- sim_study_par(nsim = n_sim, scenarios = scenario_i_alpha, models = c("fixmodel", "sepmodel", "poolmodel", "mixmodel"), endpoint = "cont")
+results_i_alpha <- sim_study_par(nsim = n_sim, scenarios = scenario_i_alpha, models = c("fixmodel", "sepmodel", "poolmodel", "mixmodel"), endpoint = "cont", perc_cores = 0.9)
 write_csv(results_i_alpha, "results/results_i_alpha.csv")
 
 
 
 
-# trial_data <- datasim_cont(num_arms = 2, 
-#                            n_arm = 3000, 
-#                            d = c(0, 2000),
-#                            period_blocks = 2, 
-#                            mu0 = 0,
-#                            sigma = 1,
-#                            theta = c(0.25, 0),
-#                            lambda = c(0.15, 0.15, 0.15),
-#                            trend = "linear")
-# 
-# mixmodel_cont(trial_data, arm=2)
-# 
-# # Period as random effect
-# 
-# lmerTest::lmer(response ~ as.factor(treatment) + (1 | period), trial_data)
-# 
-# summary(lmerTest::lmer(response ~ as.factor(treatment) + (1 | period), trial_data))
-# 
-# ranef(lmerTest::lmer(response ~ as.factor(treatment) + (1 | period), trial_data))
-# 
-# dotplot.ranef.mer(ranef(lmerTest::lmer(response ~ as.factor(treatment) + (1 | period), trial_data)))
-# 
-# # Period as both, fixed and random effect
-# 
-# lmerTest::lmer(response ~ as.factor(treatment) + as.factor(period) + (1 | period), trial_data)
-# 
-# summary(lmerTest::lmer(response ~ as.factor(treatment) + as.factor(period) + (1 | period), trial_data))
-# 
-# ranef(lmerTest::lmer(response ~ as.factor(treatment) + as.factor(period) + (1 | period), trial_data))
-# 
-# dotplot.ranef.mer(ranef(lmerTest::lmer(response ~ as.factor(treatment) + as.factor(period) + (1 | period), trial_data)))
+trial_data <- datasim_cont(num_arms = 2,
+                           n_arm = 3000,
+                           d = c(0, 2000),
+                           period_blocks = 2,
+                           mu0 = 0,
+                           sigma = 1,
+                           theta = c(0.25, 0),
+                           lambda = c(0.15, 0.15, 0.15),
+                           trend = "linear")
+
+mixmodel_cont(trial_data, arm=2)
+
+# Period as random effect
+
+lmerTest::lmer(response ~ as.factor(treatment) + (1 | period), trial_data)
+
+summary(lmerTest::lmer(response ~ as.factor(treatment) + (1 | period), trial_data))
+
+ranef(lmerTest::lmer(response ~ as.factor(treatment) + (1 | period), trial_data))
+
+dotplot.ranef.mer(ranef(lmerTest::lmer(response ~ as.factor(treatment) + (1 | period), trial_data)))
+
+# Period as both, fixed and random effect
+
+lmerTest::lmer(response ~ as.factor(treatment) + as.factor(period) + (1 | period), trial_data)
+
+summary(lmerTest::lmer(response ~ as.factor(treatment) + as.factor(period) + (1 | period), trial_data))
+
+ranef(lmerTest::lmer(response ~ as.factor(treatment) + as.factor(period) + (1 | period), trial_data))
+
+dotplot.ranef.mer(ranef(lmerTest::lmer(response ~ as.factor(treatment) + as.factor(period) + (1 | period), trial_data)))
+
+
+rowMeans(matrix(as.logical(c(FALSE,FALSE,TRUE,"a",NA,TRUE,TRUE,FALSE)), ncol = 4), na.rm = T)
