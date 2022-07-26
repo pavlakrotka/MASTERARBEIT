@@ -1,0 +1,71 @@
+---
+title: "MT: Non-concurrent comparisons in platform trials - preliminary simulations"
+author: 
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: yes
+    toc_depth: 3
+    toc_float: true
+    number_sections: true
+    code_folding: show 
+    theme: flatly
+---
+
+```{r setup, include = FALSE}
+library(knitr)
+opts_chunk$set(collapse = TRUE,
+               comment = "#>",
+               warning = FALSE,
+               message = FALSE,
+               fig.align = "center",
+               out.width = "70%")
+```
+
+```{r, warning=FALSE, message=FALSE, include=FALSE}
+library(tidyverse)
+library(kableExtra)
+library(latex2exp)
+library(NCC)
+set.seed(717)
+```
+
+
+
+# Introduction
+
+
+The following toy simulation study aims to explore different model-based approaches to perform treatment-control comparisons using non-concurrent controls (NCC), as well as treatment-treatment comparisons for treatments that do not overlap in the platform trial. In the considered scenarios, continuous endpoints are assumed.
+
+
+# Methods and goals
+
+## Treatment-control comparisons
+
+For treatment control comparisons, we will study 4 model-based methods differing in the way to adjust for time trend. In particular, we will examine two linear regression models that include time as fixed effect and two linear mixed models, where time enters the model as random effect. The considered adjustment is either for periods, defined as time intervals in the trial bounded by any treatment arm entering or leaving the platform, or for calendar time units (e.g. months). In all cases, data from the whole trial until the treatment arm under study finishes will be used to fit the model.
+
+We aim to compare 1) the fixed and mixed effect models and 2) the adjustment for periods and for calendar times.
+
+
+## Treatment-treatment comparisons
+
+Treatment-treatment comparisons for non-concurrent treatments will be performed using indirect comparison, as well as a model based approach. In the indirect comparison, the treatment effects for both treatments are at first estimated using concurrent controls only. Subsequently, the estimated treatment effects are compared to each other using a t-test. The considered model-based approach is a fixed-effect model adjusting for periods and using one of the treatments under study as reference group.
+
+We aim to compare the results from these two approaches in terms of the type I error and statistical power.
+
+
+# Trial design
+
+We consider a platform trial with 3 treatment arms, where 2 of them were added to the ongoing trial later on, such that the 3rd treatment arm is added at the same time as the 1st one finishes. The considered trial design is illustrated bellow.
+
+For the treatment-control comparisons, we focus on statistical inference for the second and third treatment arms, as there are already NCC data available. Treatment-treatment comparison is performed for treatment arms 1 and 3, since they do not overlap in the trial.
+
+We assume equal sample sizes of 1000 in all treatment arms and 1:1:...:1 allocation ratio in each period. 
+
+```{r, echo=FALSE}
+include_graphics("figures/trial_design.png")
+```
+
+
+
+# Results
