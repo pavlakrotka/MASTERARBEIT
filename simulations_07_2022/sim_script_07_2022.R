@@ -31,6 +31,10 @@ results_i_alpha <- sim_study_par(nsim = n_sim, scenarios = scenario_i_alpha, mod
 write_csv(results_i_alpha, "results/results_i_alpha.csv")
 
 
+results_i_alpha_TM <- sim_study_par(nsim = n_sim, scenarios = scenario_i_alpha, models = c("timemachine"), endpoint = "cont", perc_cores = 0.9)
+write_csv(results_i_alpha_TM, "results/results_i_alpha_TM.csv")
+
+
 
 
 trial_data <- datasim_cont(num_arms = 2,
