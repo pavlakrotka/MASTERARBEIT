@@ -72,9 +72,52 @@ write_csv(results_i_eq_pow, "results/results_i_eq_pow.csv")
 #                            period_blocks = 2,
 #                            mu0 = 0,
 #                            sigma = 1,
-#                            theta = c(0.25, 0, 0),
-#                            lambda = c(0, 0, 0, 0),
-#                            trend = "linear")
+#                            theta = c(0, 0, 0),
+#                            lambda = rep(0.5, 4),
+#                            trend = "stepwise")
 # 
 # mixmodel_cal_cont(trial_data, arm=2)
+# 
+# library(spaMM)
+# mod <- fitme(response ~ 1 + as.factor(treatment) + AR1(1|period), data = trial_data, method="REML")
+# 
+# mod
+# 
+# summary(mod)
+# 
+# 
+# ggplot(trial_data) +
+#   geom_point(aes(x=1:nrow(trial_data), y=response, color=period))
+# 
+# 
+# cor(trial_data[trial_data$period==2 & trial_data$treatment==0,"response"], trial_data[trial_data$period==3 & trial_data$treatment==0,"response"])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
