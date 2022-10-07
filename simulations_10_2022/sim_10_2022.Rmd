@@ -1,0 +1,621 @@
+---
+title: "MT: Non-concurrent comparisons in platform trials - preliminary simulations"
+author: 
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: yes
+    toc_depth: 3
+    toc_float: true
+    number_sections: true
+    code_folding: show 
+    theme: flatly
+---
+
+```{r setup, include = FALSE}
+library(knitr)
+opts_chunk$set(collapse = TRUE,
+               echo = FALSE,
+               comment = "#>",
+               warning = FALSE,
+               message = FALSE,
+               fig.align = "center",
+               out.width = "100%")
+```
+
+```{r, warning=FALSE, message=FALSE, include=FALSE}
+library(tidyverse)
+library(kableExtra)
+library(latex2exp)
+library(NCC)
+set.seed(717)
+```
+
+```{r}
+results_ii_eq_alpha <- read_csv("results/results_ii_eq_alpha.csv")
+results_ii_eq_pow <- read_csv("results/results_ii_eq_pow.csv")
+
+results_iii_eq_alpha <- read_csv("results/results_iii_eq_alpha.csv")
+results_iii_eq_pow <- read_csv("results/results_iii_eq_pow.csv")
+```
+
+
+# Scenario with 10 arms
+
+- $n=250$
+- equal time trend - $\lambda \in [-0.5, 0.5]$
+- entry times $d_i = d \cdot (i-1)$, $d \in (0, 100, 200, 300, 400, 500)$
+- $\theta_k=0.25$ under $H_1$
+- linear and stepwise (jump only when new arm enters) time trends
+- calendar time length = 25
+
+## Overview {.tabset}
+
+### d = 0 {.unnumbered}
+
+```{r}
+d <- seq(0, 500, by=100)[1]
+
+trial_data <- datasim_cont(num_arms = 10, n_arm = 250, d = d*c(0:9), theta = rep(0, 10), lambda = rep(0.5, 11), sigma = 1, trend = "stepwise_2", full = T)$Data
+
+plot_trial(trial_data$treatment) +
+  coord_cartesian(xlim = c(0, 5000)) +
+  labs(title = "Trial progress over time",
+       subtitle = paste0("d = ", d))
+```
+
+### d = 100 {.unnumbered}
+
+```{r}
+d <- seq(0, 500, by=100)[2]
+
+trial_data <- datasim_cont(num_arms = 10, n_arm = 250, d = d*c(0:9), theta = rep(0, 10), lambda = rep(0.5, 11), sigma = 1, trend = "stepwise_2", full = T)$Data
+
+plot_trial(trial_data$treatment) +
+  coord_cartesian(xlim = c(0, 5000)) +
+  labs(title = "Trial progress over time",
+       subtitle = paste0("d = ", d))
+```
+
+
+### d = 200 {.unnumbered}
+
+```{r}
+d <- seq(0, 500, by=100)[3]
+
+trial_data <- datasim_cont(num_arms = 10, n_arm = 250, d = d*c(0:9), theta = rep(0, 10), lambda = rep(0.5, 11), sigma = 1, trend = "stepwise_2", full = T)$Data
+
+plot_trial(trial_data$treatment) +
+  coord_cartesian(xlim = c(0, 5000)) +
+  labs(title = "Trial progress over time",
+       subtitle = paste0("d = ", d))
+```
+
+
+
+### d = 300 {.unnumbered}
+
+```{r}
+d <- seq(0, 500, by=100)[4]
+
+trial_data <- datasim_cont(num_arms = 10, n_arm = 250, d = d*c(0:9), theta = rep(0, 10), lambda = rep(0.5, 11), sigma = 1, trend = "stepwise_2", full = T)$Data
+
+plot_trial(trial_data$treatment) +
+  coord_cartesian(xlim = c(0, 5000)) +
+  labs(title = "Trial progress over time",
+       subtitle = paste0("d = ", d))
+```
+
+
+
+### d = 400 {.unnumbered}
+
+```{r}
+d <- seq(0, 500, by=100)[5]
+
+trial_data <- datasim_cont(num_arms = 10, n_arm = 250, d = d*c(0:9), theta = rep(0, 10), lambda = rep(0.5, 11), sigma = 1, trend = "stepwise_2", full = T)$Data
+
+plot_trial(trial_data$treatment) +
+  coord_cartesian(xlim = c(0, 5000)) +
+  labs(title = "Trial progress over time",
+       subtitle = paste0("d = ", d))
+```
+
+
+
+### d = 500 {.unnumbered}
+
+```{r}
+d <- seq(0, 500, by=100)[6]
+
+trial_data <- datasim_cont(num_arms = 10, n_arm = 250, d = d*c(0:9), theta = rep(0, 10), lambda = rep(0.5, 11), sigma = 1, trend = "stepwise_2", full = T)$Data
+
+plot_trial(trial_data$treatment) +
+  coord_cartesian(xlim = c(0, 5000)) +
+  labs(title = "Trial progress over time",
+       subtitle = paste0("d = ", d))
+```
+
+
+## Type I error wrt study arm {.tabset}
+
+### d = 0 {.unnumbered}
+
+```{r}
+d <- seq(0, 500, by=100)[1]
+
+ggplot(results_ii_eq_alpha %>% filter(lambda0==0.250 & d2==d & model!="poolmodel")) +
+  geom_line(aes(study_arm, reject_h0, color=model)) +
+  geom_point(aes(study_arm, reject_h0, color=model)) +
+  labs(x="Study arm", y="Type I error", color="Analysis approach:") +
+  geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
+  facet_grid(~ trend) +
+  coord_cartesian(ylim = c(0, 1)) +
+  labs(title = paste0("d = ", d))
+```
+
+
+### d = 100 {.unnumbered}
+
+```{r}
+d <- seq(0, 500, by=100)[2]
+
+ggplot(results_ii_eq_alpha %>% filter(lambda0==0.125 & d2==d & model!="poolmodel")) +
+  geom_line(aes(study_arm, reject_h0, color=model)) +
+  geom_point(aes(study_arm, reject_h0, color=model)) +
+  labs(x="Study arm", y="Type I error", color="Analysis approach:") +
+  geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
+  facet_grid(~ trend) +
+  coord_cartesian(ylim = c(0, 1)) +
+  labs(title = paste0("d = ", d))
+```
+
+
+
+### d = 200 {.unnumbered}
+
+```{r}
+d <- seq(0, 500, by=100)[3]
+
+ggplot(results_ii_eq_alpha %>% filter(lambda0==0.125 & d2==d & model!="poolmodel")) +
+  geom_line(aes(study_arm, reject_h0, color=model)) +
+  geom_point(aes(study_arm, reject_h0, color=model)) +
+  labs(x="Study arm", y="Type I error", color="Analysis approach:") +
+  geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
+  facet_grid(~ trend) +
+  coord_cartesian(ylim = c(0, 1)) +
+  labs(title = paste0("d = ", d))
+```
+
+
+### d = 300 {.unnumbered}
+
+```{r}
+d <- seq(0, 500, by=100)[4]
+
+ggplot(results_ii_eq_alpha %>% filter(lambda0==0.250 & d2==d & model!="poolmodel")) +
+  geom_line(aes(study_arm, reject_h0, color=model)) +
+  geom_point(aes(study_arm, reject_h0, color=model)) +
+  labs(x="Study arm", y="Type I error", color="Analysis approach:") +
+  geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
+  facet_grid(~ trend) +
+  coord_cartesian(ylim = c(0, 1)) +
+  labs(title = paste0("d = ", d))
+```
+
+
+### d = 400 {.unnumbered}
+
+```{r}
+d <- seq(0, 500, by=100)[5]
+
+ggplot(results_ii_eq_alpha %>% filter(lambda0==0.125 & d2==d & model!="poolmodel")) +
+  geom_line(aes(study_arm, reject_h0, color=model)) +
+  geom_point(aes(study_arm, reject_h0, color=model)) +
+  labs(x="Study arm", y="Type I error", color="Analysis approach:") +
+  geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
+  facet_grid(~ trend) +
+  coord_cartesian(ylim = c(0, 1)) +
+  labs(title = paste0("d = ", d))
+```
+
+
+
+### d = 500 {.unnumbered}
+
+```{r}
+d <- seq(0, 500, by=100)[6]
+
+ggplot(results_ii_eq_alpha %>% filter(lambda0==0.125 & d2==d & model!="poolmodel")) +
+  geom_line(aes(study_arm, reject_h0, color=model)) +
+  geom_point(aes(study_arm, reject_h0, color=model)) +
+  labs(x="Study arm", y="Type I error", color="Analysis approach:") +
+  geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
+  facet_grid(~ trend) +
+  coord_cartesian(ylim = c(0, 1)) +
+  labs(title = paste0("d = ", d))
+```
+
+
+
+## Type I error wrt lambda {.tabset}
+
+- inference for arm 5
+
+### d = 0 {.unnumbered}
+
+```{r}
+d <- seq(0, 500, by=100)[1]
+
+ggplot(results_ii_eq_alpha %>% filter(study_arm==5 & d2==d & model!="poolmodel")) +
+  geom_line(aes(lambda0, reject_h0, color=model)) +
+  geom_point(aes(lambda0, reject_h0, color=model)) +
+  labs(x=TeX("$\\lambda$"), y="Type I error", color="Analysis approach:") +
+  geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
+  facet_grid(~ trend) +
+  coord_cartesian(ylim = c(0, 1)) +
+  labs(title = paste0("d = ", d))
+```
+
+
+### d = 100 {.unnumbered}
+
+```{r}
+d <- seq(0, 500, by=100)[2]
+
+ggplot(results_ii_eq_alpha %>% filter(study_arm==5 & d2==d & model!="poolmodel")) +
+  geom_line(aes(lambda0, reject_h0, color=model)) +
+  geom_point(aes(lambda0, reject_h0, color=model)) +
+  labs(x=TeX("$\\lambda$"), y="Type I error", color="Analysis approach:") +
+  geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
+  facet_grid(~ trend) +
+  coord_cartesian(ylim = c(0, 1)) +
+  labs(title = paste0("d = ", d))
+```
+
+
+
+### d = 200 {.unnumbered}
+
+```{r}
+d <- seq(0, 500, by=100)[3]
+
+ggplot(results_ii_eq_alpha %>% filter(study_arm==5 & d2==d & model!="poolmodel")) +
+  geom_line(aes(lambda0, reject_h0, color=model)) +
+  geom_point(aes(lambda0, reject_h0, color=model)) +
+  labs(x=TeX("$\\lambda$"), y="Type I error", color="Analysis approach:") +
+  geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
+  facet_grid(~ trend) +
+  coord_cartesian(ylim = c(0, 1)) +
+  labs(title = paste0("d = ", d))
+```
+
+
+### d = 300 {.unnumbered}
+
+```{r}
+d <- seq(0, 500, by=100)[4]
+
+ggplot(results_ii_eq_alpha %>% filter(study_arm==5 & d2==d & model!="poolmodel")) +
+  geom_line(aes(lambda0, reject_h0, color=model)) +
+  geom_point(aes(lambda0, reject_h0, color=model)) +
+  labs(x=TeX("$\\lambda$"), y="Type I error", color="Analysis approach:") +
+  geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
+  facet_grid(~ trend) +
+  coord_cartesian(ylim = c(0, 1)) +
+  labs(title = paste0("d = ", d))
+```
+
+
+### d = 400 {.unnumbered}
+
+```{r}
+d <- seq(0, 500, by=100)[5]
+
+ggplot(results_ii_eq_alpha %>% filter(study_arm==5 & d2==d & model!="poolmodel")) +
+  geom_line(aes(lambda0, reject_h0, color=model)) +
+  geom_point(aes(lambda0, reject_h0, color=model)) +
+  labs(x=TeX("$\\lambda$"), y="Type I error", color="Analysis approach:") +
+  geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
+  facet_grid(~ trend) +
+  coord_cartesian(ylim = c(0, 1)) +
+  labs(title = paste0("d = ", d))
+```
+
+
+
+### d = 500 {.unnumbered}
+
+```{r}
+d <- seq(0, 500, by=100)[6]
+
+ggplot(results_ii_eq_alpha %>% filter(study_arm==5 & d2==d & model!="poolmodel")) +
+  geom_line(aes(lambda0, reject_h0, color=model)) +
+  geom_point(aes(lambda0, reject_h0, color=model)) +
+  labs(x=TeX("$\\lambda$"), y="Type I error", color="Analysis approach:") +
+  geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
+  facet_grid(~ trend) +
+  coord_cartesian(ylim = c(0, 1)) +
+  labs(title = paste0("d = ", d))
+```
+
+
+
+
+
+
+## Power wrt study arm {.tabset}
+
+- inference for arm 5
+
+### d = 0 {.unnumbered}
+
+```{r}
+d <- seq(0, 500, by=100)[1]
+
+ggplot(results_ii_eq_pow %>% filter(lambda0==0.250 & d2==d & model!="poolmodel")) +
+  geom_line(aes(study_arm, reject_h0, color=model)) +
+  geom_point(aes(study_arm, reject_h0, color=model)) +
+  labs(x="Study arm", y="Power", color="Analysis approach:") +
+  facet_grid(~ trend) +
+  coord_cartesian(ylim = c(0.78, 1)) +
+  labs(title = paste0("d = ", d))
+```
+
+
+### d = 100 {.unnumbered}
+
+```{r}
+d <- seq(0, 500, by=100)[2]
+
+ggplot(results_ii_eq_pow %>% filter(lambda0==0.125 & d2==d & model!="poolmodel")) +
+  geom_line(aes(study_arm, reject_h0, color=model)) +
+  geom_point(aes(study_arm, reject_h0, color=model)) +
+  labs(x="Study arm", y="Power", color="Analysis approach:") +
+  facet_grid(~ trend) +
+  coord_cartesian(ylim = c(0.78, 1)) +
+  labs(title = paste0("d = ", d))
+```
+
+
+
+### d = 200 {.unnumbered}
+
+```{r}
+d <- seq(0, 500, by=100)[3]
+
+ggplot(results_ii_eq_pow %>% filter(lambda0==0.125 & d2==d & model!="poolmodel")) +
+  geom_line(aes(study_arm, reject_h0, color=model)) +
+  geom_point(aes(study_arm, reject_h0, color=model)) +
+  labs(x="Study arm", y="Power", color="Analysis approach:") +
+  facet_grid(~ trend) +
+  coord_cartesian(ylim = c(0.78, 1)) +
+  labs(title = paste0("d = ", d))
+```
+
+
+### d = 300 {.unnumbered}
+
+```{r}
+d <- seq(0, 500, by=100)[4]
+
+ggplot(results_ii_eq_pow %>% filter(lambda0==0.250 & d2==d & model!="poolmodel")) +
+  geom_line(aes(study_arm, reject_h0, color=model)) +
+  geom_point(aes(study_arm, reject_h0, color=model)) +
+  labs(x="Study arm", y="Power", color="Analysis approach:") +
+  facet_grid(~ trend) +
+  #coord_cartesian(ylim = c(0.78, 1)) +
+  labs(title = paste0("d = ", d))
+```
+
+
+### d = 400 {.unnumbered}
+
+```{r}
+d <- seq(0, 500, by=100)[5]
+
+ggplot(results_ii_eq_pow %>% filter(lambda0==0.125 & d2==d & model!="poolmodel")) +
+  geom_line(aes(study_arm, reject_h0, color=model)) +
+  geom_point(aes(study_arm, reject_h0, color=model)) +
+  labs(x="Study arm", y="Power", color="Analysis approach:") +
+  facet_grid(~ trend) +
+  coord_cartesian(ylim = c(0.78, 1)) +
+  labs(title = paste0("d = ", d))
+```
+
+
+
+### d = 500 {.unnumbered}
+
+```{r}
+d <- seq(0, 500, by=100)[6]
+
+ggplot(results_ii_eq_pow %>% filter(lambda0==0.125 & d2==d & model!="poolmodel")) +
+  geom_line(aes(study_arm, reject_h0, color=model)) +
+  geom_point(aes(study_arm, reject_h0, color=model)) +
+  labs(x="Study arm", y="Power", color="Analysis approach:") +
+  facet_grid(~ trend) +
+  coord_cartesian(ylim = c(0.78, 1)) +
+  labs(title = paste0("d = ", d))
+```
+
+
+
+
+
+
+## Power wrt lambda {.tabset}
+
+### d = 0 {.unnumbered}
+
+```{r}
+d <- seq(0, 500, by=100)[1]
+
+ggplot(results_ii_eq_pow %>% filter(study_arm==5 & d2==d & model!="poolmodel")) +
+  geom_line(aes(lambda0, reject_h0, color=model)) +
+  geom_point(aes(lambda0, reject_h0, color=model)) +
+  labs(x=TeX("$\\lambda$"), y="Power", color="Analysis approach:") +
+  facet_grid(~ trend) +
+  coord_cartesian(ylim = c(0, 1)) +
+  labs(title = paste0("d = ", d))
+```
+
+
+### d = 100 {.unnumbered}
+
+```{r}
+d <- seq(0, 500, by=100)[2]
+
+ggplot(results_ii_eq_pow %>% filter(study_arm==5 & d2==d & model!="poolmodel")) +
+  geom_line(aes(lambda0, reject_h0, color=model)) +
+  geom_point(aes(lambda0, reject_h0, color=model)) +
+  labs(x=TeX("$\\lambda$"), y="Power", color="Analysis approach:") +
+  facet_grid(~ trend) +
+  coord_cartesian(ylim = c(0, 1)) +
+  labs(title = paste0("d = ", d))
+```
+
+
+
+### d = 200 {.unnumbered}
+
+```{r}
+d <- seq(0, 500, by=100)[3]
+
+ggplot(results_ii_eq_pow %>% filter(study_arm==5 & d2==d & model!="poolmodel")) +
+  geom_line(aes(lambda0, reject_h0, color=model)) +
+  geom_point(aes(lambda0, reject_h0, color=model)) +
+  labs(x=TeX("$\\lambda$"), y="Power", color="Analysis approach:") +
+  facet_grid(~ trend) +
+  coord_cartesian(ylim = c(0, 1)) +
+  labs(title = paste0("d = ", d))
+```
+
+
+### d = 300 {.unnumbered}
+
+```{r}
+d <- seq(0, 500, by=100)[4]
+
+ggplot(results_ii_eq_pow %>% filter(study_arm==5 & d2==d & model!="poolmodel")) +
+  geom_line(aes(lambda0, reject_h0, color=model)) +
+  geom_point(aes(lambda0, reject_h0, color=model)) +
+  labs(x=TeX("$\\lambda$"), y="Power", color="Analysis approach:") +
+  facet_grid(~ trend) +
+  coord_cartesian(ylim = c(0, 1)) +
+  labs(title = paste0("d = ", d))
+```
+
+
+### d = 400 {.unnumbered}
+
+```{r}
+d <- seq(0, 500, by=100)[5]
+
+ggplot(results_ii_eq_pow %>% filter(study_arm==5 & d2==d & model!="poolmodel")) +
+  geom_line(aes(lambda0, reject_h0, color=model)) +
+  geom_point(aes(lambda0, reject_h0, color=model)) +
+  labs(x=TeX("$\\lambda$"), y="Power", color="Analysis approach:") +
+  facet_grid(~ trend) +
+  coord_cartesian(ylim = c(0, 1)) +
+  labs(title = paste0("d = ", d))
+```
+
+
+
+### d = 500 {.unnumbered}
+
+```{r}
+d <- seq(0, 500, by=100)[6]
+
+ggplot(results_ii_eq_pow %>% filter(study_arm==5 & d2==d & model!="poolmodel")) +
+  geom_line(aes(lambda0, reject_h0, color=model)) +
+  geom_point(aes(lambda0, reject_h0, color=model)) +
+  labs(x=TeX("$\\lambda$"), y="Power", color="Analysis approach:") +
+  facet_grid(~ trend) +
+  coord_cartesian(ylim = c(0, 1)) +
+  labs(title = paste0("d = ", d))
+```
+
+
+
+
+# Scenario with 4 arms
+
+- $n=250$
+- equal time trend - $\lambda = 0.15$
+- entry times $d_i = 250 \cdot (i-1)$
+- $\theta_k=0.25$ under $H_1$
+- linear and stepwise (jump only when new arm enters) time trends
+- varying calendar time length
+
+## Overview
+
+```{r}
+d <- 250
+trial_data <- datasim_cont(num_arms = 4, n_arm = 250, d = d*c(0:3), theta = rep(0, 4), lambda = rep(0.5, 5), sigma = 1, trend = "stepwise_2", full = T)$Data
+
+plot_trial(trial_data$treatment) +
+  labs(title = "Trial progress over time",
+       subtitle = paste0("d = ", d))
+```
+
+
+## Type I error
+
+- inference for arm 3
+
+```{r}
+ggplot(results_iii_eq_alpha %>% filter(study_arm==3, model %in% c("fixmodel_cal", "mixmodel_cal", "mixmodel_AR1_cal", "fixmodel"))) +
+  geom_line(aes(unit_size, reject_h0, color = as.factor(model))) +
+  geom_point(aes(unit_size, reject_h0, color = as.factor(model))) +
+  labs(x="Calendar time unit length", y="Type I error", color="Analysis approach:") +
+  geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
+  facet_grid(~ trend)
+```
+
+## Power
+
+- inference for arm 3
+
+```{r}
+ggplot(results_iii_eq_pow %>% filter(study_arm==3, model %in% c("fixmodel_cal", "mixmodel_cal", "mixmodel_AR1_cal", "fixmodel"))) +
+  geom_line(aes(unit_size, reject_h0, color = as.factor(model))) +
+  geom_point(aes(unit_size, reject_h0, color = as.factor(model))) +
+  labs(x="Calendar time unit length", y="Power", color="Analysis approach:") +
+  facet_grid(~ trend)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
