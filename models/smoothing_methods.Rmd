@@ -1,6 +1,6 @@
 ---
 title: "Model-based approaches for modeling response over time in the presence of time trends"
-uthor: "Pavla Krotka, Marta Bofill Roig"
+author: "Pavla Krotka, Marta Bofill Roig"
 date: "`r Sys.Date()`"
 output: 
   html_document:
@@ -53,11 +53,14 @@ library(lmerTest)
 # Fitted values - linear trend
 
 ```{r}
+set.seed(1)
 data_lin <- datasim_cont(num_arms = 3, n_arm = 100, d = c(0, 100, 250),
                          theta = rep(0, 3), lambda = rep(5, 4), sigma = 1, trend = "linear", full=T)$Data
 
 data_lin$treatment <- as.factor(data_lin$treatment)
 data_lin$period <- as.factor(data_lin$period)
+
+data_lin_c <- data_lin %>% filter(treatment==0)
 ```
 
 ```{r, include=FALSE}
@@ -110,6 +113,61 @@ ggarrange(ggplot(data_lin) +
           common.legend = T, legend = "bottom", nrow = 3, ncol = 2)
 ```
 
+## Control response over time
+
+```{r}
+loessMod10 <- loess(response ~ j, data=data_lin_c, span=0.10, degree = 2) # 10% smoothing span
+loessMod25 <- loess(response ~ j, data=data_lin_c, span=0.25, degree = 2) # 25% smoothing span
+loessMod50 <- loess(response ~ j, data=data_lin_c, span=0.50, degree = 2) # 50% smoothing span
+loessMod75 <- loess(response ~ j, data=data_lin_c, span=0.75, degree = 2) # 50% smoothing span
+loessMod1 <- loess(response ~ j, data=data_lin_c, span=1, degree = 2)
+```
+
+
+```{r}
+ggplot(data_lin_c) +
+  aes(x = j, y = response) + 
+  geom_point(alpha = 0.5) + 
+  geom_line(aes(y = fitted(loessMod10), color = "0.10"), size = 1) +
+  geom_line(aes(y = fitted(loessMod25), color = "0.25"), size = 1) +
+  geom_line(aes(y = fitted(loessMod50), color = "0.50"), size = 1) +
+  geom_line(aes(y = fitted(loessMod75), color = "0.75"), size = 1) +
+  geom_line(aes(y = fitted(loessMod1), color = "1"), size = 1) +
+  #geom_smooth(method = "lm", se = F) +
+  scale_color_manual(name = "Span", values = c("0.10" = "red", 
+                                               "0.25" = "blue", 
+                                               "0.50" = "orange", 
+                                               "0.75" = "green", 
+                                               "1" = "black")) +
+  labs(x = "Patient recruitment", y = "Response", title = "Local Regression (LOESS)")
+```
+
+```{r}
+gam5 <- gam(response ~ s(j, bs = "cr", k = 5), data = data_lin_c, method = "REML")
+gam10 <- gam(response ~ s(j, bs = "cr", k = 10), data = data_lin_c, method = "REML")
+gam15 <- gam(response ~ s(j, bs = "cr", k = 15), data = data_lin_c, method = "REML")
+gam20 <- gam(response ~ s(j, bs = "cr", k = 20), data = data_lin_c, method = "REML")
+gam25 <- gam(response ~ s(j, bs = "cr", k = 25), data = data_lin_c, method = "REML")
+```
+
+
+```{r}
+ggplot(data_lin_c) +
+  aes(x = j, y = response) + 
+  geom_point(alpha = 0.5) + 
+  geom_line(aes(y = fitted(gam5), color = "5"), size = 1) +
+  geom_line(aes(y = fitted(gam10), color = "10"), size = 1) +
+  geom_line(aes(y = fitted(gam15), color = "15"), size = 1) +
+  geom_line(aes(y = fitted(gam20), color = "20"), size = 1) +
+  geom_line(aes(y = fitted(gam25), color = "25"), size = 1) +
+  #geom_smooth(method = "lm", se = F) +
+  scale_color_manual(name = "k", values = c("5" = "red", 
+                                            "10" = "blue", 
+                                            "15" = "orange", 
+                                            "20" = "green", 
+                                            "25" = "black")) +
+  labs(x = "Patient recruitment", y = "Response", title = "Generalized additive model with P-splines")
+```
 
 
 # Fitted values - inverted-U trend
@@ -117,12 +175,17 @@ ggarrange(ggplot(data_lin) +
 
 
 ```{r}
+set.seed(1)
 data_inv <- datasim_cont(num_arms = 3, n_arm = 100, d = c(0, 100, 250),
                          theta = rep(0, 3), lambda = rep(5, 4), sigma = 1, trend = "inv_u", N_peak = 200, full=T)$Data
 
 data_inv$treatment <- as.factor(data_inv$treatment)
 data_inv$period <- as.factor(data_inv$period)
+
+data_inv_c <- data_inv %>% filter(treatment==0)
 ```
+
+
 
 ```{r, include=FALSE}
 fix_step <- lm(response ~ treatment + period, data_inv)
@@ -176,7 +239,61 @@ ggarrange(ggplot(data_inv) +
 
 
 
+## Control response over time
 
+```{r}
+loessMod10 <- loess(response ~ j, data=data_inv_c, span=0.10, degree = 2) # 10% smoothing span
+loessMod25 <- loess(response ~ j, data=data_inv_c, span=0.25, degree = 2) # 25% smoothing span
+loessMod50 <- loess(response ~ j, data=data_inv_c, span=0.50, degree = 2) # 50% smoothing span
+loessMod75 <- loess(response ~ j, data=data_inv_c, span=0.75, degree = 2) # 50% smoothing span
+loessMod1 <- loess(response ~ j, data=data_inv_c, span=1, degree = 2)
+```
+
+
+```{r}
+ggplot(data_inv_c) +
+  aes(x = j, y = response) + 
+  geom_point(alpha = 0.5) + 
+  geom_line(aes(y = fitted(loessMod10), color = "0.10"), size = 1) +
+  geom_line(aes(y = fitted(loessMod25), color = "0.25"), size = 1) +
+  geom_line(aes(y = fitted(loessMod50), color = "0.50"), size = 1) +
+  geom_line(aes(y = fitted(loessMod75), color = "0.75"), size = 1) +
+  geom_line(aes(y = fitted(loessMod1), color = "1"), size = 1) +
+  #geom_smooth(method = "lm", se = F) +
+  scale_color_manual(name = "Span", values = c("0.10" = "red", 
+                                               "0.25" = "blue", 
+                                               "0.50" = "orange", 
+                                               "0.75" = "green", 
+                                               "1" = "black")) +
+  labs(x = "Patient recruitment", y = "Response", title = "Local Regression (LOESS)")
+```
+
+```{r}
+gam5 <- gam(response ~ s(j, bs = "cr", k = 5), data = data_inv_c, method = "REML")
+gam10 <- gam(response ~ s(j, bs = "cr", k = 10), data = data_inv_c, method = "REML")
+gam15 <- gam(response ~ s(j, bs = "cr", k = 15), data = data_inv_c, method = "REML")
+gam20 <- gam(response ~ s(j, bs = "cr", k = 20), data = data_inv_c, method = "REML")
+gam25 <- gam(response ~ s(j, bs = "cr", k = 25), data = data_inv_c, method = "REML")
+```
+
+
+```{r}
+ggplot(data_inv_c) +
+  aes(x = j, y = response) + 
+  geom_point(alpha = 0.5) + 
+  geom_line(aes(y = fitted(gam5), color = "5"), size = 1) +
+  geom_line(aes(y = fitted(gam10), color = "10"), size = 1) +
+  geom_line(aes(y = fitted(gam15), color = "15"), size = 1) +
+  geom_line(aes(y = fitted(gam20), color = "20"), size = 1) +
+  geom_line(aes(y = fitted(gam25), color = "25"), size = 1) +
+  #geom_smooth(method = "lm", se = F) +
+  scale_color_manual(name = "k", values = c("5" = "red", 
+                                            "10" = "blue", 
+                                            "15" = "orange", 
+                                            "20" = "green", 
+                                            "25" = "black")) +
+  labs(x = "Patient recruitment", y = "Response", title = "Generalized additive model with P-splines")
+```
 
 
 
