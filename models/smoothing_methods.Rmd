@@ -63,55 +63,6 @@ data_lin$period <- as.factor(data_lin$period)
 data_lin_c <- data_lin %>% filter(treatment==0)
 ```
 
-```{r, include=FALSE}
-fix_step <- lm(response ~ treatment + period, data_lin)
-fix_lin <- lm(response ~ treatment + j, data_lin)
-
-mix_step <- lmer(response ~ treatment + (1 | period), data_lin)
-
-gam <- gam(
-  response ~ treatment + s(j, bs = "cr", k = 10), 
-  data = data_lin, 
-  method = "REML"
-)
-
-kernel <- npregbw(formula = response ~ treatment + j,
-                  data = data_lin)
-```
-
-```{r, fig.height=8, fig.width=8}
-ggarrange(ggplot(data_lin) + 
-            aes(x = j, y = response, color = treatment) + 
-            geom_point(alpha = 0.5) + 
-            geom_line(aes(y = fitted(fix_step)), size=1) +
-            labs(x = "Patient recruitment", y = "Response", title = "Fixed-effect model with stepwise adjustment", color = "Treatment:"),
-          
-          ggplot(data_lin) + 
-            aes(x = j, y = response, color = treatment) + 
-            geom_point(alpha = 0.5) + 
-            geom_line(aes(y = fitted(fix_lin)), size=1) +
-            labs(x = "Patient recruitment", y = "Response", title = "Fixed-effect model with linear adjustment", color = "Treatment:"),
-          
-          ggplot(data_lin) + 
-            aes(x = j, y = response, color = treatment) + 
-            geom_point(alpha = 0.5) + 
-            geom_line(aes(y = fitted(mix_step)), size=1) +
-            labs(x = "Patient recruitment", y = "Response", title = "Mixed-effect model with stepwise adjustment", color = "Treatment:"),
-          
-          ggplot(data_lin) + 
-            aes(x = j, y = response, color = treatment) + 
-            geom_point(alpha = 0.5) + 
-            geom_line(aes(y = fitted(gam)), size=1) +
-            labs(x = "Patient recruitment", y = "Response", title = "Generalized additive model with P-splines", color = "Treatment:"),
-          
-          ggplot(data_lin) + 
-            aes(x = j, y = response, color = treatment) + 
-            geom_point(alpha = 0.5) + 
-            geom_line(aes(y = fitted(npreg(kernel))), size=1) +
-            labs(x = "Patient recruitment", y = "Response", title = "Kernel regression", color = "Treatment:"),
-          
-          common.legend = T, legend = "bottom", nrow = 3, ncol = 2)
-```
 
 ## Control response over time
 
@@ -170,6 +121,62 @@ ggplot(data_lin_c) +
 ```
 
 
+## Response for all arms over time
+
+```{r, include=FALSE}
+fix_step <- lm(response ~ treatment + period, data_lin)
+fix_lin <- lm(response ~ treatment + j, data_lin)
+
+mix_step <- lmer(response ~ treatment + (1 | period), data_lin)
+
+gam <- gam(
+  response ~ treatment + s(j, bs = "cr", k = 10), 
+  data = data_lin, 
+  method = "REML"
+)
+
+kernel <- npregbw(formula = response ~ treatment + j,
+                  data = data_lin)
+```
+
+
+```{r, fig.height=8, fig.width=8}
+ggarrange(ggplot(data_lin) + 
+            aes(x = j, y = response, color = treatment) + 
+            geom_point(alpha = 0.5) + 
+            geom_line(aes(y = fitted(fix_step)), size=1) +
+            labs(x = "Patient recruitment", y = "Response", title = "Fixed-effect model with stepwise adjustment", color = "Treatment:"),
+          
+          ggplot(data_lin) + 
+            aes(x = j, y = response, color = treatment) + 
+            geom_point(alpha = 0.5) + 
+            geom_line(aes(y = fitted(fix_lin)), size=1) +
+            labs(x = "Patient recruitment", y = "Response", title = "Fixed-effect model with linear adjustment", color = "Treatment:"),
+          
+          ggplot(data_lin) + 
+            aes(x = j, y = response, color = treatment) + 
+            geom_point(alpha = 0.5) + 
+            geom_line(aes(y = fitted(mix_step)), size=1) +
+            labs(x = "Patient recruitment", y = "Response", title = "Mixed-effect model with stepwise adjustment", color = "Treatment:"),
+          
+          ggplot(data_lin) + 
+            aes(x = j, y = response, color = treatment) + 
+            geom_point(alpha = 0.5) + 
+            geom_line(aes(y = fitted(gam)), size=1) +
+            labs(x = "Patient recruitment", y = "Response", title = "Generalized additive model with P-splines", color = "Treatment:"),
+          
+          ggplot(data_lin) + 
+            aes(x = j, y = response, color = treatment) + 
+            geom_point(alpha = 0.5) + 
+            geom_line(aes(y = fitted(npreg(kernel))), size=1) +
+            labs(x = "Patient recruitment", y = "Response", title = "Kernel regression", color = "Treatment:"),
+          
+          common.legend = T, legend = "bottom", nrow = 3, ncol = 2)
+```
+
+
+
+
 # Fitted values - inverted-U trend
 
 
@@ -184,60 +191,6 @@ data_inv$period <- as.factor(data_inv$period)
 
 data_inv_c <- data_inv %>% filter(treatment==0)
 ```
-
-
-
-```{r, include=FALSE}
-fix_step <- lm(response ~ treatment + period, data_inv)
-fix_lin <- lm(response ~ treatment + j, data_inv)
-
-mix_step <- lmer(response ~ treatment + (1 | period), data_inv)
-
-gam <- gam(
-  response ~ treatment + s(j, bs = "cr", k = 10), 
-  data = data_inv, 
-  method = "REML"
-)
-
-kernel <- npregbw(formula = response ~ treatment + j,
-                  data = data_inv)
-```
-
-```{r, fig.height=8, fig.width=8}
-ggarrange(ggplot(data_inv) + 
-            aes(x = j, y = response, color = treatment) + 
-            geom_point(alpha = 0.5) + 
-            geom_line(aes(y = fitted(fix_step)), size=1) +
-            labs(x = "Patient recruitment", y = "Response", title = "Fixed-effect model with stepwise adjustment", color = "Treatment:"),
-          
-          ggplot(data_inv) + 
-            aes(x = j, y = response, color = treatment) + 
-            geom_point(alpha = 0.5) + 
-            geom_line(aes(y = fitted(fix_lin)), size=1) +
-            labs(x = "Patient recruitment", y = "Response", title = "Fixed-effect model with linear adjustment", color = "Treatment:"),
-          
-          ggplot(data_inv) + 
-            aes(x = j, y = response, color = treatment) + 
-            geom_point(alpha = 0.5) + 
-            geom_line(aes(y = fitted(mix_step)), size=1) +
-            labs(x = "Patient recruitment", y = "Response", title = "Mixed-effect model with stepwise adjustment", color = "Treatment:"),
-          
-          ggplot(data_inv) + 
-            aes(x = j, y = response, color = treatment) + 
-            geom_point(alpha = 0.5) + 
-            geom_line(aes(y = fitted(gam)), size=1) +
-            labs(x = "Patient recruitment", y = "Response", title = "Generalized additive model with P-splines", color = "Treatment:"),
-          
-          ggplot(data_inv) + 
-            aes(x = j, y = response, color = treatment) + 
-            geom_point(alpha = 0.5) + 
-            geom_line(aes(y = fitted(npreg(kernel))), size=1) +
-            labs(x = "Patient recruitment", y = "Response", title = "Kernel regression", color = "Treatment:"),
-          
-          common.legend = T, legend = "bottom", nrow = 3, ncol = 2)
-```
-
-
 
 ## Control response over time
 
@@ -297,11 +250,187 @@ ggplot(data_inv_c) +
 
 
 
+## Response for all arms over time
+
+```{r, include=FALSE}
+fix_step <- lm(response ~ treatment + period, data_inv)
+fix_lin <- lm(response ~ treatment + j, data_inv)
+
+mix_step <- lmer(response ~ treatment + (1 | period), data_inv)
+
+gam <- gam(
+  response ~ treatment + s(j, bs = "cr", k = 10), 
+  data = data_inv, 
+  method = "REML"
+)
+
+kernel <- npregbw(formula = response ~ treatment + j,
+                  data = data_inv)
+```
+
+```{r, fig.height=8, fig.width=8}
+ggarrange(ggplot(data_inv) + 
+            aes(x = j, y = response, color = treatment) + 
+            geom_point(alpha = 0.5) + 
+            geom_line(aes(y = fitted(fix_step)), size=1) +
+            labs(x = "Patient recruitment", y = "Response", title = "Fixed-effect model with stepwise adjustment", color = "Treatment:"),
+          
+          ggplot(data_inv) + 
+            aes(x = j, y = response, color = treatment) + 
+            geom_point(alpha = 0.5) + 
+            geom_line(aes(y = fitted(fix_lin)), size=1) +
+            labs(x = "Patient recruitment", y = "Response", title = "Fixed-effect model with linear adjustment", color = "Treatment:"),
+          
+          ggplot(data_inv) + 
+            aes(x = j, y = response, color = treatment) + 
+            geom_point(alpha = 0.5) + 
+            geom_line(aes(y = fitted(mix_step)), size=1) +
+            labs(x = "Patient recruitment", y = "Response", title = "Mixed-effect model with stepwise adjustment", color = "Treatment:"),
+          
+          ggplot(data_inv) + 
+            aes(x = j, y = response, color = treatment) + 
+            geom_point(alpha = 0.5) + 
+            geom_line(aes(y = fitted(gam)), size=1) +
+            labs(x = "Patient recruitment", y = "Response", title = "Generalized additive model with P-splines", color = "Treatment:"),
+          
+          ggplot(data_inv) + 
+            aes(x = j, y = response, color = treatment) + 
+            geom_point(alpha = 0.5) + 
+            geom_line(aes(y = fitted(npreg(kernel))), size=1) +
+            labs(x = "Patient recruitment", y = "Response", title = "Kernel regression", color = "Treatment:"),
+          
+          common.legend = T, legend = "bottom", nrow = 3, ncol = 2)
+```
 
 
 
 
 
+
+# Fitted values - stepwise time trend
+
+
+
+```{r}
+set.seed(1)
+data_step <- datasim_cont(num_arms = 3, n_arm = 100, d = c(0, 100, 250),
+                         theta = rep(0, 3), lambda = rep(5, 4), sigma = 1, trend = "stepwise_2", full=T)$Data
+
+data_step$treatment <- as.factor(data_step$treatment)
+data_step$period <- as.factor(data_step$period)
+
+data_step_c <- data_step %>% filter(treatment==0)
+```
+
+
+## Control response over time
+
+```{r}
+loessMod10 <- loess(response ~ j, data=data_step_c, span=0.10, degree = 2) # 10% smoothing span
+loessMod25 <- loess(response ~ j, data=data_step_c, span=0.25, degree = 2) # 25% smoothing span
+loessMod50 <- loess(response ~ j, data=data_step_c, span=0.50, degree = 2) # 50% smoothing span
+loessMod75 <- loess(response ~ j, data=data_step_c, span=0.75, degree = 2) # 50% smoothing span
+loessMod1 <- loess(response ~ j, data=data_step_c, span=1, degree = 2)
+```
+
+
+```{r}
+ggplot(data_step_c) +
+  aes(x = j, y = response) + 
+  geom_point(alpha = 0.5) + 
+  geom_line(aes(y = fitted(loessMod10), color = "0.10"), size = 1) +
+  geom_line(aes(y = fitted(loessMod25), color = "0.25"), size = 1) +
+  geom_line(aes(y = fitted(loessMod50), color = "0.50"), size = 1) +
+  geom_line(aes(y = fitted(loessMod75), color = "0.75"), size = 1) +
+  geom_line(aes(y = fitted(loessMod1), color = "1"), size = 1) +
+  #geom_smooth(method = "lm", se = F) +
+  scale_color_manual(name = "Span", values = c("0.10" = "red", 
+                                               "0.25" = "blue", 
+                                               "0.50" = "orange", 
+                                               "0.75" = "green", 
+                                               "1" = "black")) +
+  labs(x = "Patient recruitment", y = "Response", title = "Local Regression (LOESS)")
+```
+
+```{r}
+gam5 <- gam(response ~ s(j, bs = "cr", k = 5), data = data_step_c, method = "REML")
+gam10 <- gam(response ~ s(j, bs = "cr", k = 10), data = data_step_c, method = "REML")
+gam15 <- gam(response ~ s(j, bs = "cr", k = 15), data = data_step_c, method = "REML")
+gam20 <- gam(response ~ s(j, bs = "cr", k = 20), data = data_step_c, method = "REML")
+gam25 <- gam(response ~ s(j, bs = "cr", k = 25), data = data_step_c, method = "REML")
+```
+
+
+```{r}
+ggplot(data_step_c) +
+  aes(x = j, y = response) + 
+  geom_point(alpha = 0.5) + 
+  geom_line(aes(y = fitted(gam5), color = "5"), size = 1) +
+  geom_line(aes(y = fitted(gam10), color = "10"), size = 1) +
+  geom_line(aes(y = fitted(gam15), color = "15"), size = 1) +
+  geom_line(aes(y = fitted(gam20), color = "20"), size = 1) +
+  geom_line(aes(y = fitted(gam25), color = "25"), size = 1) +
+  #geom_smooth(method = "lm", se = F) +
+  scale_color_manual(name = "k", values = c("5" = "red", 
+                                            "10" = "blue", 
+                                            "15" = "orange", 
+                                            "20" = "green", 
+                                            "25" = "black")) +
+  labs(x = "Patient recruitment", y = "Response", title = "Generalized additive model with P-splines")
+```
+
+
+## Response for all arms over time
+
+```{r, include=FALSE}
+fix_step <- lm(response ~ treatment + period, data_step)
+fix_lin <- lm(response ~ treatment + j, data_step)
+
+mix_step <- lmer(response ~ treatment + (1 | period), data_step)
+
+gam <- gam(
+  response ~ treatment + s(j, bs = "cr", k = 10), 
+  data = data_step, 
+  method = "REML"
+)
+
+kernel <- npregbw(formula = response ~ treatment + j,
+                  data = data_step)
+```
+
+```{r, fig.height=8, fig.width=8}
+ggarrange(ggplot(data_step) + 
+            aes(x = j, y = response, color = treatment) + 
+            geom_point(alpha = 0.5) + 
+            geom_line(aes(y = fitted(fix_step)), size=1) +
+            labs(x = "Patient recruitment", y = "Response", title = "Fixed-effect model with stepwise adjustment", color = "Treatment:"),
+          
+          ggplot(data_step) + 
+            aes(x = j, y = response, color = treatment) + 
+            geom_point(alpha = 0.5) + 
+            geom_line(aes(y = fitted(fix_lin)), size=1) +
+            labs(x = "Patient recruitment", y = "Response", title = "Fixed-effect model with linear adjustment", color = "Treatment:"),
+          
+          ggplot(data_step) + 
+            aes(x = j, y = response, color = treatment) + 
+            geom_point(alpha = 0.5) + 
+            geom_line(aes(y = fitted(mix_step)), size=1) +
+            labs(x = "Patient recruitment", y = "Response", title = "Mixed-effect model with stepwise adjustment", color = "Treatment:"),
+          
+          ggplot(data_step) + 
+            aes(x = j, y = response, color = treatment) + 
+            geom_point(alpha = 0.5) + 
+            geom_line(aes(y = fitted(gam)), size=1) +
+            labs(x = "Patient recruitment", y = "Response", title = "Generalized additive model with P-splines", color = "Treatment:"),
+          
+          ggplot(data_step) + 
+            aes(x = j, y = response, color = treatment) + 
+            geom_point(alpha = 0.5) + 
+            geom_line(aes(y = fitted(npreg(kernel))), size=1) +
+            labs(x = "Patient recruitment", y = "Response", title = "Kernel regression", color = "Treatment:"),
+          
+          common.legend = T, legend = "bottom", nrow = 3, ncol = 2)
+```
 
 
 
