@@ -152,4 +152,4 @@ pl
 
 # splines with random effects
 mod_spl_r <- lmer(response ~ as.factor(treatment) + (bs(j, df = 3) | period ),  data = db_inv_f) 
-summary(mod_spl_r)
+ranef(mod_spl_r)
