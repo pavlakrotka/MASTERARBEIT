@@ -151,4 +151,5 @@ pl=ggplot(db_inv_f) +
 pl
 
 # splines with random effects
-lmer(response ~ as.factor(treatment) + (bs(j, df = 3) | period ),  data = db_inv_f) 
+mod_spl_r <- lmer(response ~ as.factor(treatment) + (bs(j, df = 3) | period ),  data = db_inv_f) 
+summary(mod_spl_r)
