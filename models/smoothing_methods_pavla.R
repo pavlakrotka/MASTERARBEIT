@@ -4,9 +4,8 @@
 # Mbr
 ##########################################
 
-rm(list = ls())
+# rm(list = ls())
 library(NCC)
-library(ggplot2)
 library(tidyverse)
 
 ##########################################
@@ -37,7 +36,7 @@ pl
 ##########################################
 # Simulated trial with inverse-u time trends
 db_inv <- datasim_cont(num_arms = 3, n_arm = 100, d = c(0, 100, 250),
-                     theta = rep(0, 3), lambda = rep(5, 4), sigma = 1, trend = "inv_u", N_peak = 200, full = T)$Data
+                       theta = rep(0, 3), lambda = rep(5, 4), sigma = 1, trend = "inv_u", N_peak = 200, full = T)$Data
 plot_trial(treatments = db_inv$treatment)
 
 mod <- lm(response ~ as.factor(treatment) + as.factor(period), db_inv)
@@ -46,6 +45,7 @@ summary(mod)
 n=dim(db_inv)[1]
 db_inv$pred = predict(mod)
 db_inv$treatment = as.factor(db_inv$treatment) 
+db_inv$period = as.factor(db_inv$period) 
 pl=ggplot(db_inv) +
   geom_point(aes(x = 1:n/n, y = response, color = treatment)) +
   geom_line(aes(x = 1:n/n, y = pred, color = treatment),size=1.3) + 
@@ -81,7 +81,7 @@ db_inv$cal_time <- rep(c(1:ceiling((nrow(db_inv)/unit_size))), each=unit_size)[1
 loessMod10_cal <- loess(response ~ cal_time, data=db_inv, span=0.10) # 10% smoothing span
 loessMod25_cal <- loess(response ~ cal_time, data=db_inv, span=0.25) # 25% smoothing span
 loessMod50_cal <- loess(response ~ cal_time, data=db_inv, span=0.50) # 50% smoothing span
-loessMod75_cal <- loess(response ~ cal_time, data=db_inv, span=0.75) # 50% smoothing span
+loessMod75_cal <- loess(response ~ cal_time, data=db_inv, span=0.75) # 75% smoothing span
 
 
 # get smoothed output
@@ -117,6 +117,24 @@ lines(smoothed75_cal, x=db_inv$j, col="orange", lwd=2, lty=2)
 
 # https://cran.r-project.org/web/packages/ks/ks.pdf
 
+library(np)
+
+bw <- npregbw(formula = response ~ treatment + j,
+              data = db_inv_f)
+
+bw
+summary(bw)
+
+npreg(bw)
+summary(npreg(bw))
+
+#fitted(npreg(bw))
+
+ggplot(db_inv_f) + 
+  aes(x = j, y = response, color = treatment) + 
+  geom_point() + 
+  geom_line(aes(y = fitted(npreg(bw))), size=1.3)
+
 ##########################################
 # Approach 3: Splines
 
@@ -138,7 +156,7 @@ require("splines")
 # gam(counts ~ dependent_variable + ID + s(t, by = ID) , family="poisson") 
 
 
-mod_spl <- lm(response ~ as.factor(treatment) + bs(j, df = 3), data = db_inv_f)
+mod_spl <- lm(response ~ as.factor(treatment) + bs(j, degree = 3), data = db_inv_f)
 summary(mod_spl)
 
 n=dim(db_inv_f)[1]
@@ -151,4 +169,25 @@ pl=ggplot(db_inv_f) +
 pl
 
 # splines with random effects
-lmer(response ~ as.factor(treatment) + (bs(j, df = 3) | period ),  data = db_inv_f) 
+lmer(response ~ as.factor(treatment) + (bs(j, df = 3) | period ),  data = db_inv_f)
+
+
+
+
+
+gam <- gam(
+  response ~ treatment + s(j, bs = "cr", k = 10), 
+  data = db_inv_f, 
+  method = "REML"
+)
+
+summary(gam)
+
+db_inv_f$fitted_gam <- fitted(gam)
+
+ggplot(db_inv_f) + 
+  aes(x = j, y = response, color = treatment) + 
+  geom_point() + 
+  geom_line(aes(y = fitted_gam), size=1.3)
+
+
