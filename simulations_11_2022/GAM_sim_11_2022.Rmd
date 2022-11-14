@@ -1,0 +1,182 @@
+---
+title: "MT: Generalized additive models for non-concurrent comparisons in platform trials - preliminary simulations"
+author: 
+date: "`r Sys.Date()`"
+output: 
+  html_document:
+    toc: yes
+    toc_depth: 3
+    toc_float: true
+    number_sections: true
+    code_folding: show 
+    theme: flatly
+---
+
+```{r setup, include = FALSE}
+library(knitr)
+opts_chunk$set(collapse = TRUE,
+               echo = FALSE,
+               comment = "#>",
+               warning = FALSE,
+               message = FALSE,
+               fig.align = "center",
+               out.width = "100%")
+```
+
+```{r, warning=FALSE, message=FALSE, include=FALSE}
+library(tidyverse)
+library(kableExtra)
+library(latex2exp)
+library(NCC)
+library(mgcv)
+set.seed(717)
+```
+
+```{r}
+results_iii_gam_eq_alpha <- read_csv("results/results_iii_gam_eq_alpha.csv")
+results_iii_gam_eq_pow <- read_csv("results/results_iii_gam_eq_pow.csv")
+```
+
+# Smoothing bases
+
+```{r}
+d <- 250
+trial_data <- datasim_cont(num_arms = 4, n_arm = 250, d = d*c(0:3), theta = rep(0, 4), lambda = rep(0.5, 5), sigma = 1, trend = "stepwise_2", full = T)$Data
+```
+
+## cr - Cubic regression splines
+
+```{r}
+gam <- gam(response ~ treatment + s(j, bs = "cr"), data = trial_data)
+
+ggplot(trial_data) + 
+  aes(x = j, y = response, color = as.factor(treatment)) + 
+  geom_point(alpha = 0.5) + 
+  geom_line(aes(y = fitted(gam)), size=1) +
+  labs(x = "Patient recruitment", y = "Response", color = "Treatment:")
+```
+
+
+## gp - Gaussian process smooths
+
+```{r}
+gam <- gam(response ~ treatment + s(j, bs = "gp"), data = trial_data)
+
+ggplot(trial_data) + 
+  aes(x = j, y = response, color = as.factor(treatment)) + 
+  geom_point(alpha = 0.5) + 
+  geom_line(aes(y = fitted(gam)), size=1) +
+  labs(x = "Patient recruitment", y = "Response", color = "Treatment:")
+```
+
+## ps - P-splines
+
+```{r}
+gam <- gam(response ~ treatment + s(j, bs = "ps"), data = trial_data)
+
+ggplot(trial_data) + 
+  aes(x = j, y = response, color = as.factor(treatment)) + 
+  geom_point(alpha = 0.5) + 
+  geom_line(aes(y = fitted(gam)), size=1) +
+  labs(x = "Patient recruitment", y = "Response", color = "Treatment:")
+```
+
+## re - Random effects
+
+```{r}
+gam <- gam(response ~ treatment + s(j, bs = "re"), data = trial_data)
+
+ggplot(trial_data) + 
+  aes(x = j, y = response, color = as.factor(treatment)) + 
+  geom_point(alpha = 0.5) + 
+  geom_line(aes(y = fitted(gam)), size=1) +
+  labs(x = "Patient recruitment", y = "Response", color = "Treatment:")
+```
+
+## tp - Thin plate regression splines
+
+```{r}
+gam <- gam(response ~ treatment + s(j, bs = "tp"), data = trial_data)
+
+ggplot(trial_data) + 
+  aes(x = j, y = response, color = as.factor(treatment)) + 
+  geom_point(alpha = 0.5) + 
+  geom_line(aes(y = fitted(gam)), size=1) +
+  labs(x = "Patient recruitment", y = "Response", color = "Treatment:")
+```
+
+
+# Scenario with 4 arms
+
+- $n=250$
+- equal time trend - $\lambda \in [-0.5; 0.5]$
+- entry times $d_i = 250 \cdot (i-1)$
+- $\theta_k=0.25$ under $H_1$
+- linear and stepwise (jump only when new arm enters) time trends
+
+## Overview
+
+```{r}
+d <- 250
+trial_data <- datasim_cont(num_arms = 4, n_arm = 250, d = d*c(0:3), theta = rep(0, 4), lambda = rep(0.5, 5), sigma = 1, trend = "stepwise_2", full = T)$Data
+
+plot_trial(trial_data$treatment) +
+  labs(title = "Trial progress over time",
+       subtitle = paste0("d = ", d))
+```
+
+
+## Type I error
+
+```{r}
+ggplot(results_iii_gam_eq_alpha) +
+  geom_line(aes(lambda1, reject_h0, color = as.factor(smoothing_basis), linetype = as.factor(study_arm))) +
+  geom_point(aes(lambda1, reject_h0, color = as.factor(smoothing_basis))) +
+  labs(x=TeX("$\\lambda$"), y="Type I error", color="Smoothing basis:", linetype = "Arm under study:") +
+  geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
+  facet_grid(~ trend)
+```
+
+## Power
+
+```{r}
+ggplot(results_iii_gam_eq_pow) +
+  geom_line(aes(lambda1, reject_h0, color = as.factor(smoothing_basis), linetype = as.factor(study_arm))) +
+  geom_point(aes(lambda1, reject_h0, color = as.factor(smoothing_basis))) +
+  labs(x=TeX("$\\lambda$"), y="Power", color="Smoothing basis:", linetype = "Arm under study:") +
+  facet_grid(~ trend)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
