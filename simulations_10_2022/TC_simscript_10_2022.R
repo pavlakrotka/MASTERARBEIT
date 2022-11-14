@@ -1,4 +1,4 @@
-#devtools::install_github("pavlakrotka/NCC", build = TRUE, force=T)
+#devtools::install_github("pavlakrotka/NCC@v1.0", build = TRUE, force=T)
 library(NCC)
 library(tidyverse)
 
