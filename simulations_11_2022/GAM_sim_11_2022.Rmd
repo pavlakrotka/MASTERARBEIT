@@ -35,6 +35,9 @@ set.seed(717)
 ```{r}
 results_iii_gam_eq_alpha <- read_csv("results/results_iii_gam_eq_alpha.csv")
 results_iii_gam_eq_pow <- read_csv("results/results_iii_gam_eq_pow.csv")
+
+results_iii_splines_eq_alpha <- read_csv("results/results_iii_splines_eq_alpha.csv")
+results_iii_splines_eq_pow <- read_csv("results/results_iii_splines_eq_pow.csv")
 ```
 
 # Smoothing bases
@@ -149,23 +152,67 @@ ggplot(results_iii_gam_eq_pow) +
 
 
 
+## Type I error
+
+```{r}
+ggplot(results_iii_splines_eq_alpha %>% filter(bs_degree==1)) +
+  geom_line(aes(lambda1, reject_h0, color = as.factor(model), linetype = as.factor(study_arm))) +
+  geom_point(aes(lambda1, reject_h0, color = as.factor(model))) +
+  labs(x=TeX("$\\lambda$"), y="Type I error", color="Model:", linetype = "Arm under study:") +
+  geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
+  facet_grid(~ trend)
+```
+
+
+```{r}
+ggplot(results_iii_splines_eq_alpha %>% filter(bs_degree==2)) +
+  geom_line(aes(lambda1, reject_h0, color = as.factor(model), linetype = as.factor(study_arm))) +
+  geom_point(aes(lambda1, reject_h0, color = as.factor(model))) +
+  labs(x=TeX("$\\lambda$"), y="Type I error", color="Model:", linetype = "Arm under study:") +
+  geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
+  facet_grid(~ trend)
+```
+
+
+```{r}
+ggplot(results_iii_splines_eq_alpha %>% filter(bs_degree==3)) +
+  geom_line(aes(lambda1, reject_h0, color = as.factor(model), linetype = as.factor(study_arm))) +
+  geom_point(aes(lambda1, reject_h0, color = as.factor(model))) +
+  labs(x=TeX("$\\lambda$"), y="Type I error", color="Model:", linetype = "Arm under study:") +
+  geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
+  facet_grid(~ trend)
+```
 
 
 
 
+## Power
+
+```{r}
+ggplot(results_iii_splines_eq_pow %>% filter(bs_degree==1)) +
+  geom_line(aes(lambda1, reject_h0, color = as.factor(model), linetype = as.factor(study_arm))) +
+  geom_point(aes(lambda1, reject_h0, color = as.factor(model))) +
+  labs(x=TeX("$\\lambda$"), y="Power", color="Model:", linetype = "Arm under study:") +
+  facet_grid(~ trend)
+```
 
 
+```{r}
+ggplot(results_iii_splines_eq_pow %>% filter(bs_degree==2)) +
+  geom_line(aes(lambda1, reject_h0, color = as.factor(model), linetype = as.factor(study_arm))) +
+  geom_point(aes(lambda1, reject_h0, color = as.factor(model))) +
+  labs(x=TeX("$\\lambda$"), y="Power", color="Model:", linetype = "Arm under study:") +
+  facet_grid(~ trend)
+```
 
 
-
-
-
-
-
-
-
-
-
+```{r}
+ggplot(results_iii_splines_eq_pow %>% filter(bs_degree==3)) +
+  geom_line(aes(lambda1, reject_h0, color = as.factor(model), linetype = as.factor(study_arm))) +
+  geom_point(aes(lambda1, reject_h0, color = as.factor(model))) +
+  labs(x=TeX("$\\lambda$"), y="Power", color="Model:", linetype = "Arm under study:") +
+  facet_grid(~ trend)
+```
 
 
 
