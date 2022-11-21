@@ -112,7 +112,8 @@ $$B_i^{0} =
 and
 
 $$B_i^{0} \equiv 0 \hspace{0.2cm} \mathrm{if} \hspace{0.2cm} \zeta_i = \zeta_{i+1}$$
-## Position of knots
+
+### Position of knots
 
 - Place the inner knots to the beginning of each period $s=2,\ldots,S$, such that one polynomial of degree $d$ is always fitted to each period. In this case, the number of inner knots $Z=S-1$. 
 
@@ -120,13 +121,15 @@ $$B_i^{0} \equiv 0 \hspace{0.2cm} \mathrm{if} \hspace{0.2cm} \zeta_i = \zeta_{i+
 
 - Boundary knots are always set to 1 and $N$, hence to the beginning and end of the trial.
 
-## Degree of polynomial
+### Degree of polynomial
 
 Regarding the degree of the fitted polynomial, we explore linear, quadratic and cubic splines, i.e. $d \in (1,2,3)$.
 
-## Results
+### Results
 
-### Linear spline
+For comparative purposes, the results using a regression model with fixed effects and period or calendar time adjustment are plotted as well. In a setting with linear time trend, both newly considered approaches (B-splines with both strategies for placing knots) maintain the type I error at 2.5\%, regardless of the strength of the time trend. However, if the time trend is stepwise, the only the B-spline where knots are placed according to the calendar time maintains the T1E. If the polynomial is only fitted for each periods, the T1E is inflated in the presence of stepwise time trends. The degree of the polynomial does not seem to play major role for the T1E and power. The power using B-splines with knots according to calendar time is comparable to the power obtained using the fixed effect regression model.
+
+#### Linear spline
 
 ```{r}
 knots <- c(250, 500, 667, 750, 1139, 1391)
@@ -139,7 +142,7 @@ ggplot(trial_data) +
   labs(x = "Patient recruitment", y = "Response", color = "Treatment:")
 ```
 
-#### Type I error
+##### Type I error
 
 ```{r}
 ggplot(results_iii_splines_eq_alpha %>% filter(bs_degree==1)) +
@@ -151,7 +154,7 @@ ggplot(results_iii_splines_eq_alpha %>% filter(bs_degree==1)) +
   scale_color_discrete(labels = c("Fixmodel - periods", "Fixmodel - calendar time", "Splines - periods", "Splines - calendar time"))
 ```
 
-#### Power
+##### Power
 
 ```{r}
 ggplot(results_iii_splines_eq_pow %>% filter(bs_degree==1)) +
@@ -163,7 +166,7 @@ ggplot(results_iii_splines_eq_pow %>% filter(bs_degree==1)) +
 ```
 
 
-### Quadratic spline
+#### Quadratic spline
 
 ```{r}
 knots <- c(250, 500, 667, 750, 1139, 1391)
@@ -176,7 +179,7 @@ ggplot(trial_data) +
   labs(x = "Patient recruitment", y = "Response", color = "Treatment:")
 ```
 
-#### Type I error
+##### Type I error
 
 ```{r}
 ggplot(results_iii_splines_eq_alpha %>% filter(bs_degree==2)) +
@@ -188,7 +191,7 @@ ggplot(results_iii_splines_eq_alpha %>% filter(bs_degree==2)) +
   scale_color_discrete(labels = c("Fixmodel - periods", "Fixmodel - calendar time", "Splines - periods", "Splines - calendar time"))
 ```
 
-#### Power
+##### Power
 
 ```{r}
 ggplot(results_iii_splines_eq_pow %>% filter(bs_degree==2)) +
@@ -199,7 +202,7 @@ ggplot(results_iii_splines_eq_pow %>% filter(bs_degree==2)) +
   scale_color_discrete(labels = c("Fixmodel - periods", "Fixmodel - calendar time", "Splines - periods", "Splines - calendar time"))
 ```
 
-### Cubic spline
+#### Cubic spline
 
 ```{r}
 knots <- c(250, 500, 667, 750, 1139, 1391)
@@ -212,7 +215,7 @@ ggplot(trial_data) +
   labs(x = "Patient recruitment", y = "Response", color = "Treatment:")
 ```
 
-#### Type I error
+##### Type I error
 
 ```{r}
 ggplot(results_iii_splines_eq_alpha %>% filter(bs_degree==3)) +
@@ -224,7 +227,7 @@ ggplot(results_iii_splines_eq_alpha %>% filter(bs_degree==3)) +
   scale_color_discrete(labels = c("Fixmodel - periods", "Fixmodel - calendar time", "Splines - periods", "Splines - calendar time"))
 ```
 
-#### Power
+##### Power
 
 ```{r}
 ggplot(results_iii_splines_eq_pow %>% filter(bs_degree==3)) +
@@ -236,17 +239,13 @@ ggplot(results_iii_splines_eq_pow %>% filter(bs_degree==3)) +
 ```
 
 
-# Smoothing bases
+## GAMs with different smoothing bases
+
+
+### cr - Cubic regression splines
 
 ```{r}
-d <- 250
-trial_data <- datasim_cont(num_arms = 4, n_arm = 250, d = d*c(0:3), theta = rep(0, 4), lambda = rep(0.5, 5), sigma = 1, trend = "stepwise_2", full = T)$Data
-```
-
-## cr - Cubic regression splines
-
-```{r}
-gam <- gam(response ~ treatment + s(j, bs = "cr"), data = trial_data)
+gam <- gam(response ~ as.factor(treatment) + s(j, bs = "cr"), data = trial_data)
 
 ggplot(trial_data) + 
   aes(x = j, y = response, color = as.factor(treatment)) + 
@@ -256,10 +255,10 @@ ggplot(trial_data) +
 ```
 
 
-## gp - Gaussian process smooths
+### gp - Gaussian process smooths
 
 ```{r}
-gam <- gam(response ~ treatment + s(j, bs = "gp"), data = trial_data)
+gam <- gam(response ~ as.factor(treatment) + s(j, bs = "gp"), data = trial_data)
 
 ggplot(trial_data) + 
   aes(x = j, y = response, color = as.factor(treatment)) + 
@@ -268,10 +267,10 @@ ggplot(trial_data) +
   labs(x = "Patient recruitment", y = "Response", color = "Treatment:")
 ```
 
-## ps - P-splines
+### ps - P-splines
 
 ```{r}
-gam <- gam(response ~ treatment + s(j, bs = "ps"), data = trial_data)
+gam <- gam(response ~ as.factor(treatment) + s(j, bs = "ps"), data = trial_data)
 
 ggplot(trial_data) + 
   aes(x = j, y = response, color = as.factor(treatment)) + 
@@ -280,10 +279,10 @@ ggplot(trial_data) +
   labs(x = "Patient recruitment", y = "Response", color = "Treatment:")
 ```
 
-## re - Random effects
+### re - Random effects
 
 ```{r}
-gam <- gam(response ~ treatment + s(j, bs = "re"), data = trial_data)
+gam <- gam(response ~ as.factor(treatment) + s(j, bs = "re"), data = trial_data)
 
 ggplot(trial_data) + 
   aes(x = j, y = response, color = as.factor(treatment)) + 
@@ -292,10 +291,10 @@ ggplot(trial_data) +
   labs(x = "Patient recruitment", y = "Response", color = "Treatment:")
 ```
 
-## tp - Thin plate regression splines
+### tp - Thin plate regression splines
 
 ```{r}
-gam <- gam(response ~ treatment + s(j, bs = "tp"), data = trial_data)
+gam <- gam(response ~ as.factor(treatment) + s(j, bs = "tp"), data = trial_data)
 
 ggplot(trial_data) + 
   aes(x = j, y = response, color = as.factor(treatment)) + 
@@ -305,9 +304,9 @@ ggplot(trial_data) +
 ```
 
 
+### Results
 
-
-## Type I error
+#### Type I error
 
 ```{r}
 ggplot(results_iii_gam_eq_alpha) +
@@ -318,7 +317,7 @@ ggplot(results_iii_gam_eq_alpha) +
   facet_grid(~ trend)
 ```
 
-## Power
+#### Power
 
 ```{r}
 ggplot(results_iii_gam_eq_pow) +
