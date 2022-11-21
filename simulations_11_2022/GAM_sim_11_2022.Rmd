@@ -241,19 +241,20 @@ ggplot(results_iii_splines_eq_pow %>% filter(bs_degree==3)) +
 
 # Next Steps
 
-- Discuss further scenarios to be considered
+- **Simulation settings:**
+    - Discuss further designs to be considered
+    - Model other time trend patterns (inverted u, linear starting later during the trial, seasonal time trend)
 
-- Model other time trend patterns (inverted u, linear starting later during the trial, cyclic?)
 
-- Explore different strategies of fitting polynomials
-    - smooth over $t_j$ instead of $j$ with larger intervals
-    - piecewise regression without the constraint of continuity in the knots
-    
-- Make more profit of the flexibility of generalized additive models (GAMs)
+- **Explore different strategies of fitting polynomials:**
+    - Smooth over $t_j$ instead of $j$ with larger intervals
+    - Piecewise regression without the constraint of continuity in the knots
+    - Make more profit of the flexibility of generalized additive models (GAMs)
 
-- **Splines - assumptions:**
-    - Equal time trends
-    - Additivity assumption -> not anymore (?)
+
+- **TBD: Assumptions for T1E control when using splines:**
+    - As in the stepwise models, we rely on equal time trends
+    - By using splines, can we relax the assumption regarding the additive effect of the time trends on the model?
     - Time trend is a continuous function
 
 

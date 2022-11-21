@@ -1786,22 +1786,28 @@ error</h5>
 <div id="next-steps" class="section level1" number="4">
 <h1><span class="header-section-number">4</span> Next Steps</h1>
 <ul>
-<li><p>Discuss further scenarios to be considered</p></li>
-<li><p>Model other time trend patterns (inverted u, linear starting
-later during the trial, cyclic?)</p></li>
-<li><p>Explore different strategies of fitting polynomials</p>
+<li><strong>Simulation settings:</strong>
 <ul>
-<li>smooth over <span class="math inline">\(t_j\)</span> instead of
-<span class="math inline">\(j\)</span> with larger intervals</li>
-<li>piecewise regression without the constraint of continuity in the
-knots</li>
+<li>Discuss further designs to be considered</li>
+<li>Model other time trend patterns (inverted u, linear starting later
+during the trial, seasonal time trend)</li>
 </ul></li>
-<li><p>Make more profit of the flexibility of generalized additive
-models (GAMs)</p></li>
-<li><p><strong>Splines - assumptions:</strong></p>
+<li><strong>Explore different strategies of fitting
+polynomials:</strong>
 <ul>
-<li>Equal time trends</li>
-<li>Additivity assumption -&gt; not anymore (?)</li>
+<li>Smooth over <span class="math inline">\(t_j\)</span> instead of
+<span class="math inline">\(j\)</span> with larger intervals</li>
+<li>Piecewise regression without the constraint of continuity in the
+knots</li>
+<li>Make more profit of the flexibility of generalized additive models
+(GAMs)</li>
+</ul></li>
+<li><strong>TBD: Assumptions for T1E control when using
+splines:</strong>
+<ul>
+<li>As in the stepwise models, we rely on equal time trends</li>
+<li>By using splines, can we relax the assumption regarding the additive
+effect of the time trends on the model?</li>
 <li>Time trend is a continuous function</li>
 </ul></li>
 </ul>
