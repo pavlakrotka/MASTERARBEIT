@@ -239,6 +239,33 @@ ggplot(results_iii_splines_eq_pow %>% filter(bs_degree==3)) +
 ```
 
 
+# Next Steps
+
+- Discuss further scenarios to be considered
+
+- Model other time trend patterns (inverted u, linear starting later during the trial, cyclic?)
+
+- Explore different strategies of fitting polynomials
+    - smooth over $t_j$ instead of $j$ with larger intervals
+    - piecewise regression without the constraint of continuity in the knots
+    
+- Make more profit of the flexibility of generalized additive models (GAMs)
+
+- **Splines - assumptions:**
+    - Equal time trends
+    - Additivity assumption -> not anymore (?)
+    - Time trend is a continuous function
+
+
+
+
+
+
+```{r}
+knit_exit()
+```
+
+
 ## GAMs with different smoothing bases
 
 
