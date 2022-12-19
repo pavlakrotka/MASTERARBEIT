@@ -64,7 +64,35 @@ results_v_eq_pow <- read_csv("results/results_v_eq_pow.csv") %>%
 
 # Introduction
 
-The following preliminary simulation study aims to explore different approaches to perform treatment-control comparisons using non-concurrent controls (NCC), where the time trend is modeled using splines. In the considered scenarios, continuous endpoints are assumed.
+The following preliminary simulation study aims to explore different approaches to perform treatment-control comparisons using non-concurrent controls (NCC), where the time trend is modeled using fixed effect models, mixed effect models and splines. In the considered scenarios, continuous endpoints are assumed.
+
+# Investigated models
+
+**Fixed effect models:**
+
+- with period adjustment
+- with calendar time adjustment
+
+**Mixed effect models:**
+
+- with period adjustment
+- with calendar time adjustment
+- with period adjustment and AR1 covariance structure
+- with calendar time adjustment and AR1 covariance structure
+
+**Spline regression:**
+
+- polynomial splines with knots placed according to periods
+- polynomial splines with knots placed according to calendar times
+- piecewise polynomials (discontinuous) per period
+- piecewise polynomial (discontinuous) per calendar time
+
+# Time trend patterns
+
+```{r}
+include_graphics("trend_patterns.png")
+```
+
 
 # Scenario with 4 arms
 
@@ -73,7 +101,8 @@ The following preliminary simulation study aims to explore different approaches 
 - equal time trend - $\lambda \in [-0.5; 0.5]$
 - entry times $d_i = 250 \cdot (i-1)$
 - $\theta_k=0.25$ under $H_1$
-- linear, stepwise (jump only when new arm enters), inverted_u ($N_{peak}=750$) and seasonal ($\psi=1,2$) time trends
+- linear, stepwise (jump only when new arm enters), inverted u ($N_{peak}=750$) and seasonal ($\psi=1,2$) time trends
+- inference for 3rd treatment arm
 
 ## Overview
 
@@ -89,9 +118,9 @@ ggplot(trial_data) +
   geom_point(aes(x=j, y=means, color=as.factor(treatment)), size=2) +
   labs(x = "Patients in the trial", y = "Mean response under H0", color="Treatment", title = "Mean response")
 
-ggplot(trial_data) +
-  geom_point(aes(x=j, y=response, color=as.factor(treatment)), size=2, alpha=0.7) +
-  labs(x = "Patients in the trial", y = "Response", color="Treatment", title = "Simulated response")
+# ggplot(trial_data) +
+#   geom_point(aes(x=j, y=response, color=as.factor(treatment)), size=2, alpha=0.7) +
+#   labs(x = "Patients in the trial", y = "Response", color="Treatment", title = "Simulated response")
 ```
 
 
@@ -197,7 +226,8 @@ ggplot(results_v_eq_pow %>% filter(model %in% c("fixmodel_cal", "mixmodel_cal", 
 - equal time trend - $\lambda \in [-0.5; 0.5]$
 - entry times $d = 250 \cdot (0,1,1,2,2,3,3)$
 - $\theta_k=0.25$ under $H_1$
-- linear, stepwise (jump only when new arm enters), inverted_u ($N_{peak}=914$) and seasonal ($\psi=1,2$) time trends
+- linear, stepwise (jump only when new arm enters), inverted u ($N_{peak}=914$) and seasonal ($\psi=1,2$) time trends
+- inference for 7th treatment arm
 
 ## Overview
 
@@ -213,9 +243,9 @@ ggplot(trial_data) +
   geom_point(aes(x=j, y=means, color=as.factor(treatment)), size=2) +
   labs(x = "Patients in the trial", y = "Mean response under H0", color="Treatment", title = "Mean response")
 
-ggplot(trial_data) +
-  geom_point(aes(x=j, y=response, color=as.factor(treatment)), size=2, alpha=0.7) +
-  labs(x = "Patients in the trial", y = "Response", color="Treatment", title = "Simulated response")
+# ggplot(trial_data) +
+#   geom_point(aes(x=j, y=response, color=as.factor(treatment)), size=2, alpha=0.7) +
+#   labs(x = "Patients in the trial", y = "Response", color="Treatment", title = "Simulated response")
 ```
 
 
