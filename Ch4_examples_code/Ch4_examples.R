@@ -59,7 +59,7 @@ set.seed(5)
 sim_results <- sim_study_par(nsim = 1000, 
                              scenarios = sim_scenarios, 
                              arms = 4,
-                             models = c("fixmodel", "sepmodel", "poolmodel"), 
+                             models = c("fixmodel", "mixmodel", "splines", "sepmodel", "poolmodel"), 
                              endpoint = "cont")
 
 
