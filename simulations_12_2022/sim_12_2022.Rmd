@@ -342,63 +342,74 @@ ggsave("figures/trial_4arms.png", width = 6, height = 4 )
 ```
 
 ```{r}
-ggarrange(ggplot(results_iii_eq_alpha %>% filter(model %in% c("fixmodel", "fixmodel_cal", "sepmodel"), trend %in% c("linear"), study_arm==3, poly_degree==1)) +
+trend_names <- c(linear = "Linear trend", stepwise_2 = "Stepwise trend", inv_u = "Inverted-U trend", seasonal_1 = "Seasonal trend with 1 cycle", seasonal_2 = "Seasonal trend with 2 cycles")
+
+ggarrange(ggplot(results_iii_eq_alpha %>% filter(model %in% c("fixmodel", "fixmodel_cal", "sepmodel"), trend!="stepwise", study_arm==3, poly_degree==1)) +
             geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
             geom_point(aes(lambda1, reject_h0, color = as.factor(model))) +
             labs(x=TeX("$\\lambda$"), y="Type I error", color="Analysis approach:") +
             scale_color_brewer(labels = c("Period adjustment", "Calendar time adjustment", "Separate analysis"), palette="Set1") +
             geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
             coord_cartesian(ylim = c(0, 0.1)) +
-            #facet_grid(~ trend) +
+            facet_grid(~ trend,
+                       labeller = labeller(trend  = as_labeller(trend_names))) +
             theme_bw() +
             theme(plot.title = element_text(hjust = 0.5)),
           
-          ggplot(results_iii_eq_pow %>% filter(model %in% c("fixmodel", "fixmodel_cal", "sepmodel"), trend %in% c("linear"), study_arm==3, poly_degree==1)) +
+          ggplot(results_iii_eq_pow %>% filter(model %in% c("fixmodel", "fixmodel_cal", "sepmodel"), trend!="stepwise", study_arm==3, poly_degree==1)) +
             geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
             geom_point(aes(lambda1, reject_h0, color = as.factor(model))) +
             labs(x=TeX("$\\lambda$"), y="Power", color="Analysis approach:") +
             scale_color_brewer(labels = c("Period adjustment", "Calendar time adjustment", "Separate analysis"), palette="Set1") +
             coord_cartesian(ylim = c(0.75, 0.9)) +
-            #facet_grid(~ trend) +
+            facet_grid(~ trend,
+                       labeller = labeller(trend  = as_labeller(trend_names))) +
             theme_bw() +
             theme(plot.title = element_text(hjust = 0.5)),
           
-          common.legend = T, legend = "bottom") + 
+          common.legend = T, legend = "bottom",
+          nrow = 2) + 
   bgcolor("white") + 
   border("white")
 
-ggsave("figures/fixmodel_cal_alpha_pow_lambda.png", width = 10, height = 3)
+#ggsave("figures/fixmodel_cal_alpha_pow_lambda.png", width = 10, height = 3)
+ggsave("figures/fixmodel_cal_alpha_pow_lambda_full.png", width = 10, height = 6)
 ```
 
 
 
 ```{r}
-ggarrange(ggplot(results_v_eq_alpha %>% filter(model %in% c("fixmodel", "fixmodel_cal", "sepmodel"), trend %in% c("linear"), study_arm==3, poly_degree==1)) +
+trend_names <- c(linear = "Linear trend", stepwise_2 = "Stepwise trend", inv_u = "Inverted-U trend", seasonal_1 = "Seasonal trend with 1 cycle", seasonal_2 = "Seasonal trend with 2 cycles")
+
+ggarrange(ggplot(results_v_eq_alpha %>% filter(model %in% c("fixmodel", "fixmodel_cal", "sepmodel"), trend!="stepwise", study_arm==3, poly_degree==1)) +
             geom_line(aes(unit_size, reject_h0, color = as.factor(model))) +
             geom_point(aes(unit_size, reject_h0, color = as.factor(model))) +
             labs(x="Calendar unit size", y="Type I error", color="Analysis approach:") +
             scale_color_brewer(labels = c("Period adjustment", "Calendar time adjustment", "Separate analysis"), palette="Set1") +
             geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
-            coord_cartesian(ylim = c(0, 0.1)) +
-            #facet_grid(~ trend) +
+            #coord_cartesian(ylim = c(0, 0.1)) +
+            facet_grid(~ trend,
+                       labeller = labeller(trend  = as_labeller(trend_names))) +
             theme_bw() +
             theme(plot.title = element_text(hjust = 0.5)),
           
-          ggplot(results_v_eq_pow %>% filter(model %in% c("fixmodel", "fixmodel_cal", "sepmodel"), trend %in% c("linear"), study_arm==3, poly_degree==1)) +
+          ggplot(results_v_eq_pow %>% filter(model %in% c("fixmodel", "fixmodel_cal", "sepmodel"), trend!="stepwise", study_arm==3, poly_degree==1)) +
             geom_line(aes(unit_size, reject_h0, color = as.factor(model))) +
             geom_point(aes(unit_size, reject_h0, color = as.factor(model))) +
             labs(x="Calendar unit size", y="Power", color="Analysis approach:") +
             scale_color_brewer(labels = c("Period adjustment", "Calendar time adjustment", "Separate analysis"), palette="Set1") +
-            coord_cartesian(ylim = c(0.75, 0.9)) +
-            #facet_grid(~ trend) +
+            #coord_cartesian(ylim = c(0.75, 0.9)) +
+            facet_grid(~ trend,
+                       labeller = labeller(trend  = as_labeller(trend_names))) +
             theme_bw() +
             theme(plot.title = element_text(hjust = 0.5)),
           
-          common.legend = T, legend = "bottom") + 
+          common.legend = T, legend = "bottom",
+          nrow = 2) + 
   bgcolor("white") + 
   border("white")
 
-ggsave("figures/fixmodel_cal_alpha_pow_unit.png", width = 10, height = 3)
+ggsave("figures/fixmodel_cal_alpha_pow_unit_full.png", width = 10, height = 6)
 ```
 
 
@@ -407,32 +418,37 @@ ggsave("figures/fixmodel_cal_alpha_pow_unit.png", width = 10, height = 3)
 
 
 ```{r}
-ggarrange(ggplot(results_iii_eq_alpha %>% filter(model %in% c("fixmodel", "mixmodel", "mixmodel_cal", "mixmodel_AR1", "mixmodel_AR1_cal"), trend %in% c("linear"), study_arm==3, poly_degree==1)) +
+trend_names <- c(linear = "Linear trend", stepwise_2 = "Stepwise trend", inv_u = "Inverted-U trend", seasonal_1 = "Seasonal trend with 1 cycle", seasonal_2 = "Seasonal trend with 2 cycles")
+
+ggarrange(ggplot(results_iii_eq_alpha %>% filter(model %in% c("fixmodel", "mixmodel", "mixmodel_cal", "mixmodel_AR1", "mixmodel_AR1_cal"), trend!="stepwise", study_arm==3, poly_degree==1)) +
             geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
             geom_point(aes(lambda1, reject_h0, color = as.factor(model))) +
             labs(x=TeX("$\\lambda$"), y="Type I error", color="Analysis approach:") +
             scale_color_discrete(labels = c("Fixed - period", "Mixed - period", "Mixed (AR1) - period", "Mixed (AR1) - calendar", "Mixed (AR1) - period")) +
             geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
             #coord_cartesian(ylim = c(0, 0.1)) +
-            #facet_grid(~ trend) +
+            facet_grid(~ trend,
+                       labeller = labeller(trend  = as_labeller(trend_names))) +
             theme_bw() +
             theme(plot.title = element_text(hjust = 0.5)),
           
-          ggplot(results_iii_eq_pow %>% filter(model %in% c("fixmodel", "mixmodel", "mixmodel_cal", "mixmodel_AR1", "mixmodel_AR1_cal"), trend %in% c("linear"), study_arm==3, poly_degree==1)) +
+          ggplot(results_iii_eq_pow %>% filter(model %in% c("fixmodel", "mixmodel", "mixmodel_cal", "mixmodel_AR1", "mixmodel_AR1_cal"), trend!="stepwise", study_arm==3, poly_degree==1)) +
             geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
             geom_point(aes(lambda1, reject_h0, color = as.factor(model))) +
             labs(x=TeX("$\\lambda$"), y="Power", color="Analysis approach:") +
             scale_color_discrete(labels = c("Fixed - period", "Mixed - period", "Mixed (AR1) - period", "Mixed (AR1) - calendar", "Mixed (AR1) - period")) +
             #coord_cartesian(ylim = c(0, 0.1)) +
-            #facet_grid(~ trend) +
+            facet_grid(~ trend,
+                       labeller = labeller(trend  = as_labeller(trend_names))) +
             theme_bw() +
             theme(plot.title = element_text(hjust = 0.5)),
           
-          common.legend = T, legend = "bottom") + 
+          common.legend = T, legend = "bottom",
+          nrow = 2) + 
   bgcolor("white") + 
   border("white")
 
-ggsave("figures/mixmodel_cal_alpha_pow_lambda.png", width = 10, height = 4)
+ggsave("figures/mixmodel_cal_alpha_pow_lambda.png", width = 10, height = 6)
 ```
 
 
@@ -448,16 +464,16 @@ plot_trial(trial_data$treatment) +
   #theme(plot.title = element_text(hjust = 0.5)) +
   scale_color_manual(values = c(rep("gray48", 3), "darkred", rep("gray48", 4)))
 
-ggsave("figures/trial_7arms.png", width = 6, height = 4 )
+ggsave("figures/trial_7arms.png", width = 6, height = 4)
 ```
 
 
 
 
 ```{r}
-trend_names <- c(linear = "Linear trend", stepwise_2 = "Stepwise trend", inv_u = "Inverted-U trend", seasonal_2 = "Seasonal trend")
+trend_names <- c(linear = "Linear trend", stepwise_2 = "Stepwise trend", inv_u = "Inverted-U trend", seasonal_1 = "Seasonal trend with 1 cycle", seasonal_2 = "Seasonal trend with 2 cycles")
 
-ggplot(results_iv_eq_alpha %>% filter(model %in% c("fixmodel", "splines", "splines_cal"), trend %in% c("linear", "inv_u", "seasonal_2", "stepwise_2"), study_arm==3, poly_degree==3)) +
+ggplot(results_iv_eq_alpha %>% filter(model %in% c("fixmodel", "splines", "splines_cal"), trend!="stepwise", study_arm==3, poly_degree==3)) +
   geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
   geom_point(aes(lambda1, reject_h0, color = as.factor(model))) +
   labs(x=TeX("$\\lambda$"), y="Type I error", color="Analysis approach:") +
@@ -469,6 +485,37 @@ ggplot(results_iv_eq_alpha %>% filter(model %in% c("fixmodel", "splines", "splin
              labeller = labeller(trend = as_labeller(trend_names))) +
   theme_bw() +
   theme(legend.position="bottom")
+
+# 
+# 
+# ggarrange(ggplot(results_iv_eq_alpha %>% filter(model %in% c("fixmodel", "splines", "splines_cal"), trend!="stepwise", study_arm==3, poly_degree==3)) +
+#             geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
+#             geom_point(aes(lambda1, reject_h0, color = as.factor(model))) +
+#             labs(x=TeX("$\\lambda$"), y="Type I error", color="Analysis approach:") +
+#             scale_color_brewer(labels = c("Fixed regression model", "Splines within periods", "Splines within calendar times"), palette="Set1") +
+#             #scale_color_discrete(labels = c("Fixed model - period", "Spines - period", "Splines - calendar")) +
+#             geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
+#             #coord_cartesian(ylim = c(0, 0.1)) +
+#             facet_grid(~ trend,
+#                        labeller = labeller(trend = as_labeller(trend_names))) +
+#             theme_bw() +
+#             theme(legend.position="bottom"),
+#           
+#           ggplot(results_iv_eq_pow %>% filter(model %in% c("fixmodel", "splines", "splines_cal"), trend!="stepwise", study_arm==3, poly_degree==3)) +
+#             geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
+#             geom_point(aes(lambda1, reject_h0, color = as.factor(model))) +
+#             labs(x=TeX("$\\lambda$"), y="Power", color="Analysis approach:") +
+#             scale_color_brewer(labels = c("Fixed regression model", "Splines within periods", "Splines within calendar times"), palette="Set1") +
+#             #coord_cartesian(ylim = c(0, 0.1)) +
+#             facet_grid(~ trend,
+#                        labeller = labeller(trend  = as_labeller(trend_names))) +
+#             theme_bw() +
+#             theme(plot.title = element_text(hjust = 0.5)),
+#           
+#           common.legend = T, legend = "bottom",
+#           nrow = 2) + 
+#   bgcolor("white") + 
+#   border("white")
 
 ggsave("figures/splines_alpha_lambda_trend.png", width = 10, height = 3)
 ```

@@ -85,7 +85,7 @@ ggplot(trial_data) +
 ### Test Ch4
 
 ```{r}
-ggplot(sim_results_Ch4, aes(x=lambda0, y=reject_h0, color=model)) +
+ggplot(sim_results_Ch4 %>% filter(study_arm==7, model!="poolmodel"), aes(x=lambda0, y=reject_h0, color=model)) +
   geom_point() +
   geom_line() +
   facet_grid(~ trend) +
@@ -145,7 +145,7 @@ ggplot(results_iv_eq_pow %>% filter(model %in% c("fixmodel", "splines", "splines
 ### Cubic polynomials
 
 ```{r}
-ggplot(results_iv_eq_alpha %>% filter(model %in% c("fixmodel", "splines", "splines_cal", "piecewise", "piecewise_cal"), trend %in% c("linear", "seasonal_1", "seasonal_2", "stepwise_2", "inv_u"), study_arm==7, poly_degree==3)) +
+ggplot(results_iv_eq_alpha %>% filter(model %in% c("fixmodel", "splines", "splines_cal", "piecewise", "piecewise_cal"), trend %in% c("linear", "seasonal_1", "seasonal_2", "stepwise_2", "inv_u"), study_arm==3, poly_degree==3)) +
   geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
   geom_point(aes(lambda1, reject_h0, color = as.factor(model))) +
   labs(x=TeX("$\\lambda$"), y="Type I error", color="Model:") +
