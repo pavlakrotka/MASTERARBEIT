@@ -35,188 +35,17 @@ set.seed(717)
 ```
 
 ```{r}
-results_iii_eq_alpha <- read_csv("results/results_iii_eq_alpha.csv") %>%
-  mutate(trend = case_when(trend=="seasonal" & n_wave==1 ~ "seasonal_1",
-                           trend=="seasonal" & n_wave==2 ~ "seasonal_2",
-                           TRUE ~ trend))
-results_iii_eq_pow <- read_csv("results/results_iii_eq_pow.csv") %>%
-  mutate(trend = case_when(trend=="seasonal" & n_wave==1 ~ "seasonal_1",
-                           trend=="seasonal" & n_wave==2 ~ "seasonal_2",
-                           TRUE ~ trend))
-
 results_iv_eq_alpha <- read_csv("results/results_iv_eq_alpha.csv") %>%
   mutate(trend = case_when(trend=="seasonal" & n_wave==1 ~ "seasonal_1",
                            trend=="seasonal" & n_wave==2 ~ "seasonal_2",
                            TRUE ~ trend))
+
+sim_results_Ch4 <- read_csv("results/sim_results_Ch4.csv")
+
 results_iv_eq_pow <- read_csv("results/results_iv_eq_pow.csv") %>%
   mutate(trend = case_when(trend=="seasonal" & n_wave==1 ~ "seasonal_1",
                            trend=="seasonal" & n_wave==2 ~ "seasonal_2",
                            TRUE ~ trend))
-
-results_v_eq_alpha <- read_csv("results/results_v_eq_alpha.csv") %>%
-  mutate(trend = case_when(trend=="seasonal" & n_wave==1 ~ "seasonal_1",
-                           trend=="seasonal" & n_wave==2 ~ "seasonal_2",
-                           TRUE ~ trend))
-results_v_eq_pow <- read_csv("results/results_v_eq_pow.csv") %>%
-  mutate(trend = case_when(trend=="seasonal" & n_wave==1 ~ "seasonal_1",
-                           trend=="seasonal" & n_wave==2 ~ "seasonal_2",
-                           TRUE ~ trend))
-```
-
-# Introduction
-
-The following preliminary simulation study aims to explore different approaches to perform treatment-control comparisons using non-concurrent controls (NCC), where the time trend is modeled using fixed effect models, mixed effect models and splines. In the considered scenarios, continuous endpoints are assumed.
-
-# Investigated models
-
-**Fixed effect models:**
-
-- with period adjustment
-- with calendar time adjustment
-
-**Mixed effect models:**
-
-- with period adjustment
-- with calendar time adjustment
-- with period adjustment and AR1 covariance structure
-- with calendar time adjustment and AR1 covariance structure
-
-**Spline regression:**
-
-- polynomial splines with knots placed according to periods
-- polynomial splines with knots placed according to calendar times
-- piecewise polynomials (discontinuous) per period
-- piecewise polynomial (discontinuous) per calendar time
-
-# Time trend patterns
-
-```{r}
-include_graphics("trend_patterns.png")
-```
-
-
-# Scenario with 4 arms
-
-- 4 experimental treatment arms
-- $n=250$
-- equal time trend - $\lambda \in [-0.5; 0.5]$
-- entry times $d_i = 250 \cdot (i-1)$
-- $\theta_k=0.25$ under $H_1$
-- linear, stepwise (jump only when new arm enters), inverted u ($N_{peak}=750$) and seasonal ($\psi=1,2$) time trends
-- inference for 3rd treatment arm
-
-## Overview
-
-```{r}
-d <- 250
-trial_data <- datasim_cont(num_arms = 4, n_arm = 250, d = d*c(0:3), theta = rep(0, 4), lambda = rep(0.5, 5), sigma = 1, trend = "stepwise_2", full = T)$Data
-
-plot_trial(trial_data$treatment) +
-  labs(title = "Trial progress over time",
-       subtitle = paste0("d = ", d))
-
-ggplot(trial_data) +
-  geom_point(aes(x=j, y=means, color=as.factor(treatment)), size=2) +
-  labs(x = "Patients in the trial", y = "Mean response under H0", color="Treatment", title = "Mean response")
-
-# ggplot(trial_data) +
-#   geom_point(aes(x=j, y=response, color=as.factor(treatment)), size=2, alpha=0.7) +
-#   labs(x = "Patients in the trial", y = "Response", color="Treatment", title = "Simulated response")
-```
-
-
-## Results
-
-### Period vs. calendar time adjustment
-
-#### Fixed effects models
-
-```{r}
-ggplot(results_iii_eq_alpha %>% filter(model %in% c("fixmodel", "fixmodel_cal", "sepmodel"), trend %in% c("linear", "seasonal_1", "seasonal_2", "stepwise_2", "inv_u"), study_arm==3, poly_degree==1)) +
-  geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
-  geom_point(aes(lambda1, reject_h0, color = as.factor(model))) +
-  labs(x=TeX("$\\lambda$"), y="Type I error", color="Model:") +
-  geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
-  facet_grid(~ trend) +
-  theme(legend.position = "bottom")
-```
-
-```{r}
-ggplot(results_iii_eq_pow %>% filter(model %in% c("fixmodel", "fixmodel_cal", "sepmodel"), trend %in% c("linear", "seasonal_1", "seasonal_2", "stepwise_2", "inv_u"), study_arm==3, poly_degree==1)) +
-  geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
-  geom_point(aes(lambda1, reject_h0, color = as.factor(model))) +
-  labs(x=TeX("$\\lambda$"), y="Power", color="Model:") +
-  facet_grid(~ trend) +
-  theme(legend.position = "bottom")
-```
-
-
-
-#### Mixed effects models
-
-```{r}
-ggplot(results_iii_eq_alpha %>% filter(model %in% c("mixmodel", "mixmodel_cal", "sepmodel"), trend %in%c("linear", "seasonal_1", "seasonal_2", "stepwise_2", "inv_u"), study_arm==3, poly_degree==1)) +
-  geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
-  geom_point(aes(lambda1, reject_h0, color = as.factor(model))) +
-  labs(x=TeX("$\\lambda$"), y="Type I error", color="Model:") +
-  geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
-  facet_grid(~ trend) +
-  theme(legend.position = "bottom")
-```
-
-```{r}
-ggplot(results_iii_eq_pow %>% filter(model %in% c("mixmodel", "mixmodel_cal", "sepmodel"), trend %in% c("linear", "seasonal_1", "seasonal_2", "stepwise_2", "inv_u"), study_arm==3, poly_degree==1)) +
-  geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
-  geom_point(aes(lambda1, reject_h0, color = as.factor(model))) +
-  labs(x=TeX("$\\lambda$"), y="Power", color="Model:") +
-  facet_grid(~ trend) +
-  theme(legend.position = "bottom")
-```
-
-
-#### Mixed effects models with AR1
-
-```{r}
-ggplot(results_iii_eq_alpha %>% filter(model %in% c("mixmodel_AR1", "mixmodel_AR1_cal", "sepmodel"), trend %in%c("linear", "seasonal_1", "seasonal_2", "stepwise_2", "inv_u"), study_arm==3, poly_degree==1)) +
-  geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
-  geom_point(aes(lambda1, reject_h0, color = as.factor(model))) +
-  labs(x=TeX("$\\lambda$"), y="Type I error", color="Model:") +
-  geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
-  facet_grid(~ trend) +
-  theme(legend.position = "bottom")
-```
-
-```{r}
-ggplot(results_iii_eq_pow %>% filter(model %in% c("mixmodel_AR1", "mixmodel_AR1_cal", "sepmodel"), trend %in% c("linear", "seasonal_1", "seasonal_2", "stepwise_2", "inv_u"), study_arm==3, poly_degree==1)) +
-  geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
-  geom_point(aes(lambda1, reject_h0, color = as.factor(model))) +
-  labs(x=TeX("$\\lambda$"), y="Power", color="Model:") +
-  facet_grid(~ trend) +
-  theme(legend.position = "bottom")
-```
-
-
-### Different lengths of calendar time interval
-
-
-```{r}
-ggplot(results_v_eq_alpha %>% filter(model %in% c("fixmodel_cal", "mixmodel_cal", "mixmodel_AR1_cal"), trend %in% c("linear", "seasonal_1", "seasonal_2", "stepwise_2", "inv_u"), study_arm==3, poly_degree==1)) +
-  geom_line(aes(unit_size, reject_h0, color = as.factor(model))) +
-  geom_point(aes(unit_size, reject_h0, color = as.factor(model))) +
-  labs(x="Unit size", y="Type I error", color="Model:") +
-  geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
-  facet_grid(~ trend) +
-  theme(legend.position = "bottom")
-```
-
-
-```{r}
-ggplot(results_v_eq_pow %>% filter(model %in% c("fixmodel_cal", "mixmodel_cal", "mixmodel_AR1_cal"), trend %in% c("linear", "seasonal_1", "seasonal_2", "stepwise_2", "inv_u"), study_arm==3, poly_degree==1)) +
-  geom_line(aes(unit_size, reject_h0, color = as.factor(model))) +
-  geom_point(aes(unit_size, reject_h0, color = as.factor(model))) +
-  labs(x="Unit size", y="Power", color="Model:") +
-  facet_grid(~ trend) +
-  theme(legend.position = "bottom")
 ```
 
 
@@ -252,6 +81,19 @@ ggplot(trial_data) +
 
 
 ## Results
+
+### Test Ch4
+
+```{r}
+ggplot(sim_results_Ch4, aes(x=lambda0, y=reject_h0, color=model)) +
+  geom_point() +
+  geom_line() +
+  facet_grid(~ trend) +
+  geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
+  labs(x="Strength of time trend", y="Type I error", color="Analysis approach") +
+  theme_bw()
+```
+
 
 ### Linear polynomials
 
@@ -410,7 +252,7 @@ ggsave("figures/fixmodel_cal_alpha_pow_unit.png", width = 10, height = 3)
 ggarrange(ggplot(results_iii_eq_alpha %>% filter(model %in% c("fixmodel", "mixmodel", "mixmodel_cal", "mixmodel_AR1", "mixmodel_AR1_cal"), trend %in% c("linear"), study_arm==3, poly_degree==1)) +
             geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
             geom_point(aes(lambda1, reject_h0, color = as.factor(model))) +
-            labs(x=TeX("$\\lambda$"), y="Type I error", color="Analysis approach:") +
+            labs(x=TeX("$\\lambda$"), y="Type I error", color="Analysis approach:", title = "Calendar unit size = 25") +
             scale_color_discrete(labels = c("Fixed - period", "Mixed - period", "Mixed (AR1) - period", "Mixed (AR1) - calendar", "Mixed (AR1) - period")) +
             geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
             #coord_cartesian(ylim = c(0, 0.1)) +
@@ -421,7 +263,7 @@ ggarrange(ggplot(results_iii_eq_alpha %>% filter(model %in% c("fixmodel", "mixmo
           ggplot(results_iii_eq_pow %>% filter(model %in% c("fixmodel", "mixmodel", "mixmodel_cal", "mixmodel_AR1", "mixmodel_AR1_cal"), trend %in% c("linear"), study_arm==3, poly_degree==1)) +
             geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
             geom_point(aes(lambda1, reject_h0, color = as.factor(model))) +
-            labs(x=TeX("$\\lambda$"), y="Power", color="Analysis approach:") +
+            labs(x=TeX("$\\lambda$"), y="Power", color="Analysis approach:", title = "Calendar unit size = 25") +
             scale_color_discrete(labels = c("Fixed - period", "Mixed - period", "Mixed (AR1) - period", "Mixed (AR1) - calendar", "Mixed (AR1) - period")) +
             #coord_cartesian(ylim = c(0, 0.1)) +
             #facet_grid(~ trend) +
@@ -432,7 +274,7 @@ ggarrange(ggplot(results_iii_eq_alpha %>% filter(model %in% c("fixmodel", "mixmo
   bgcolor("white") + 
   border("white")
 
-ggsave("figures/mixmodel_cal_alpha_pow_lambda.png", width = 10, height = 4)
+#ggsave("figures/mixmodel_cal_alpha_lambda_unit.png", width = 10, height = 4)
 ```
 
 

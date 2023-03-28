@@ -26,6 +26,7 @@ opts_chunk$set(collapse = TRUE,
 ```{r, warning=FALSE, message=FALSE, include=FALSE}
 library(tidyverse)
 library(kableExtra)
+library(ggpubr)
 library(latex2exp)
 library(NCC)
 set.seed(717)
@@ -589,24 +590,134 @@ ggplot(results_iii_eq_pow %>% filter(study_arm==3, model %in% c("fixmodel_cal", 
 
 
 
+# Plots presentation - Master's seminar
+
+```{r}
+d <- 400
+
+trial_data <- datasim_cont(num_arms = 10, n_arm = 250, d = d*c(0:9), theta = rep(0, 10), lambda = rep(0.5, 11), sigma = 1, trend = "stepwise_2", full = T)$Data
+
+
+plot_trial(trial_data$treatment) +
+  #coord_cartesian(xlim = c(0, 5000)) +
+  #labs(title = paste0("d = ", d)) +
+  theme(plot.title = element_text(hjust = 0.5)) +
+  scale_color_manual(values = c(rep("gray48", 5), "darkred", rep("gray48", 5)))
+
+ggsave("figures/trial_10arms.png", width = 6, height = 4)
+```
+
+
+```{r}
+trend_names <- c(linear = "Linear trend", stepwise_2 = "Stepwise trend", inv_u = "Inverted-U trend", seasonal_1 = "Seasonal trend with 1 cycle", seasonal_2 = "Seasonal trend with 2 cycles")
+
+ggarrange(ggplot(results_ii_eq_alpha %>% filter(study_arm==5 & d2==400 & model %in% c("poolmodel", "sepmodel", "fixmodel"), trend=="linear")) +
+            geom_line(aes(lambda0, reject_h0, color=model)) +
+            geom_point(aes(lambda0, reject_h0, color=model)) +
+            labs(x=TeX("$\\lambda$"), y="Type I error", color="Analysis approach:") +
+            geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
+            facet_grid(~ trend,
+                       labeller = labeller(trend  = as_labeller(trend_names))) +
+            #coord_cartesian(ylim = c(0, 0.3)) +
+            #labs(title = "d = 400") +
+            scale_color_brewer(labels = c("Regression model", "Pooled analysis", "Separate analysis"), palette="Set1") +
+            theme_bw() +
+            theme(plot.title = element_text(hjust = 0.5)),
+          
+          ggplot(results_ii_eq_pow %>% filter(study_arm==5 & d2==400 & model %in% c("sepmodel", "fixmodel", "poolmodel"), trend=="linear")) +
+            geom_line(aes(lambda0, reject_h0, color=model)) +
+            geom_point(aes(lambda0, reject_h0, color=model)) +
+            labs(x=TeX("$\\lambda$"), y="Power", color="Analysis approach:") +
+            facet_grid(~ trend,
+                       labeller = labeller(trend  = as_labeller(trend_names))) +
+            #coord_cartesian(ylim = c(0.75, 0.85)) +
+            #labs(title = "d = 400") +
+            scale_color_brewer(labels = c("Regression model", "Pooled analysis", "Separate analysis"), palette="Set1") +
+            theme_bw() +
+            theme(plot.title = element_text(hjust = 0.5)),
+          
+          common.legend = T, legend = "bottom") + 
+  bgcolor("white") + 
+  border("white")
+
+ggsave("figures/fixmodel_alpha_pow_lambda.png", width = 10, height = 5)
+```
 
 
 
+```{r}
+trend_names <- c(linear = "Linear trend", stepwise_2 = "Stepwise trend", inv_u = "Inverted-U trend", seasonal_1 = "Seasonal trend with 1 cycle", seasonal_2 = "Seasonal trend with 2 cycles")
+
+ggarrange(ggplot(results_ii_eq_alpha %>% filter(study_arm==5 & lambda0==0.5 & model %in% c("poolmodel", "sepmodel", "fixmodel"), trend=="linear")) +
+            geom_line(aes(d2, reject_h0, color=model)) +
+            geom_point(aes(d2, reject_h0, color=model)) +
+            labs(x=TeX("$d$"), y="Type I error", color="Analysis approach:") +
+            geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
+            facet_grid(~ trend,
+                       labeller = labeller(trend  = as_labeller(trend_names))) +
+            coord_cartesian(ylim = c(0, 0.3)) +
+            #labs(title = TeX("$\\lambda = 0.5$")) +
+            scale_color_brewer(labels = c("Regression model", "Pooled analysis", "Separate analysis"), palette="Set1") +
+            theme_bw() +
+            theme(plot.title = element_text(hjust = 0.5)),
+          
+          ggplot(results_ii_eq_pow %>% filter(study_arm==5 & lambda0==0.5 & model %in% c("poolmodel", "sepmodel", "fixmodel"), trend=="linear")) +
+            geom_line(aes(d2, reject_h0, color=model)) +
+            geom_point(aes(d2, reject_h0, color=model)) +
+            labs(x=TeX("$d$"), y="Power", color="Analysis approach:") +
+            facet_grid(~ trend,
+                       labeller = labeller(trend  = as_labeller(trend_names))) +
+            #coord_cartesian(ylim = c(0.75, 0.85)) +
+            #labs(title = TeX("$\\lambda = 0.5$")) +
+            scale_color_brewer(labels = c("Regression model", "Pooled analysis", "Separate analysis"), palette="Set1") +
+            theme_bw() +
+            theme(plot.title = element_text(hjust = 0.5)),
+          
+          common.legend = T, legend = "bottom") + 
+  bgcolor("white") + 
+  border("white")
+
+ggsave("figures/fixmodel_alpha_pow_d.png", width = 10, height = 5)
+```
 
 
 
+```{r}
+trend_names <- c(linear = "Linear trend", stepwise_2 = "Stepwise trend", inv_u = "Inverted-U trend", seasonal_1 = "Seasonal trend with 1 cycle", seasonal_2 = "Seasonal trend with 2 cycles")
 
+ggarrange(ggplot(results_ii_eq_alpha %>% filter(d2==200 & lambda0==0.5 & model %in% c("poolmodel", "sepmodel", "fixmodel"), trend=="linear")) +
+            geom_line(aes(study_arm, reject_h0, color=model)) +
+            geom_point(aes(study_arm, reject_h0, color=model)) +
+            labs(x=TeX("Study arm"), y="Type I error", color="Analysis approach:") +
+            geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
+            facet_grid(~ trend,
+                       labeller = labeller(trend  = as_labeller(trend_names))) +
+            #coord_cartesian(ylim = c(0, 0.3)) +
+            #labs(title = TeX("$\\lambda = 0.5$")) +
+            scale_color_brewer(labels = c("Regression model", "Pooled analysis", "Separate analysis"), palette="Set1") +
+            scale_x_continuous(breaks = c(1:10), labels = c(1:10)) +
+            theme_bw() +
+            theme(plot.title = element_text(hjust = 0.5)),
+          
+          ggplot(results_ii_eq_pow %>% filter(d2==200 & lambda0==0.5 & model %in% c("poolmodel", "sepmodel", "fixmodel"), trend=="linear")) +
+            geom_line(aes(study_arm, reject_h0, color=model)) +
+            geom_point(aes(study_arm, reject_h0, color=model)) +
+            labs(x=TeX("Study arm"), y="Power", color="Analysis approach:") +
+            facet_grid(~ trend,
+                       labeller = labeller(trend  = as_labeller(trend_names))) +
+            #coord_cartesian(ylim = c(0.75, 0.85)) +
+            #labs(title = TeX("$\\lambda = 0.5$")) +
+            scale_color_brewer(labels = c("Regression model", "Pooled analysis", "Separate analysis"), palette="Set1") +
+            scale_x_continuous(breaks = c(1:10), labels = c(1:10)) +
+            theme_bw() +
+            theme(plot.title = element_text(hjust = 0.5)),
+          
+          common.legend = T, legend = "bottom") + 
+  bgcolor("white") + 
+  border("white")
 
-
-
-
-
-
-
-
-
-
-
+ggsave("figures/fixmodel_alpha_pow_study_arm.png", width = 10, height = 5)
+```
 
 
 
