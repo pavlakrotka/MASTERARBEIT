@@ -33,18 +33,18 @@ ggarrange(ggplot(data_lin) +
             labs(x="Patient recruitment", y=TeX("Mean response under $H_0$"), title = "Stepwise trend") +
             scale_y_continuous(breaks = seq(0, 0.45, by=0.15), labels = seq(0, 0.45, by=0.15)),
           
-          ggplot(data_inv_u) +
+          ggplot(data_inv_u_pos) +
             geom_point(aes(x=j, y=means), color="#111d4f") +
             theme_bw() +
             theme(plot.title = element_text(hjust = 0.5)) +
-            labs(x="Patient recruitment", y=TeX("Mean response under $H_0$"), title = TeX("Inverted-u trend with positive $\\lambda$")) +
+            labs(x="Patient recruitment", y=TeX("Mean response under $H_0$"), title = TeX("Inverted-U trend with positive $\\lambda$")) +
             scale_y_continuous(breaks = seq(0, 0.075, length.out=4), labels = seq(0, 0.075, length.out=4)),
           
           ggplot(data_inv_u_neg) +
             geom_point(aes(x=j, y=means), color="#111d4f") +
             theme_bw() +
             theme(plot.title = element_text(hjust = 0.5)) +
-            labs(x="Patient recruitment", y=TeX("Mean response under $H_0$"), title = TeX("Inverted-u trend with negative $\\lambda$")) +
+            labs(x="Patient recruitment", y=TeX("Mean response under $H_0$"), title = TeX("Inverted-U trend with negative $\\lambda$")) +
             scale_y_continuous(breaks = seq(-0.075, 0, length.out=4), labels = seq(-0.075, 0, length.out=4)),
           
           ggplot(data_seasonal_1) +
