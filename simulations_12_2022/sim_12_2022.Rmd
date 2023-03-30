@@ -424,7 +424,7 @@ ggarrange(ggplot(results_iii_eq_alpha %>% filter(model %in% c("fixmodel", "mixmo
             geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
             geom_point(aes(lambda1, reject_h0, color = as.factor(model))) +
             labs(x=TeX("$\\lambda$"), y="Type I error", color="Analysis approach:") +
-            scale_color_discrete(labels = c("Fixed - period", "Mixed - period", "Mixed (AR1) - period", "Mixed (AR1) - calendar", "Mixed (AR1) - period")) +
+            scale_color_discrete(labels = c("Fixed - period", "Mixed - period", "Mixed (AR1) - period", "Mixed (AR1) - calendar", "Mixed - calendar")) +
             geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
             #coord_cartesian(ylim = c(0, 0.1)) +
             facet_grid(~ trend,
@@ -436,7 +436,7 @@ ggarrange(ggplot(results_iii_eq_alpha %>% filter(model %in% c("fixmodel", "mixmo
             geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
             geom_point(aes(lambda1, reject_h0, color = as.factor(model))) +
             labs(x=TeX("$\\lambda$"), y="Power", color="Analysis approach:") +
-            scale_color_discrete(labels = c("Fixed - period", "Mixed - period", "Mixed (AR1) - period", "Mixed (AR1) - calendar", "Mixed (AR1) - period")) +
+            scale_color_discrete(labels = c("Fixed - period", "Mixed - period", "Mixed (AR1) - period", "Mixed (AR1) - calendar", "Mixed - calendar")) +
             #coord_cartesian(ylim = c(0, 0.1)) +
             facet_grid(~ trend,
                        labeller = labeller(trend  = as_labeller(trend_names))) +
