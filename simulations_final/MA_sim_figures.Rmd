@@ -48,10 +48,10 @@ results_setting_2_pow <- read_csv("results/results_setting_2_pow.csv") %>%
                            trend=="seasonal" & n_wave==2 ~ "seasonal_2",
                            TRUE ~ trend))
 
-# results_setting_3_alpha <- read_csv("results/results_setting_3_alpha.csv") %>%
-#   mutate(trend = case_when(trend=="seasonal" & n_wave==1 ~ "seasonal_1",
-#                            trend=="seasonal" & n_wave==2 ~ "seasonal_2",
-#                            TRUE ~ trend))
+results_setting_3_alpha <- read_csv("results/results_setting_3_alpha.csv") %>%
+  mutate(trend = case_when(trend=="seasonal" & n_wave==1 ~ "seasonal_1",
+                           trend=="seasonal" & n_wave==2 ~ "seasonal_2",
+                           TRUE ~ trend))
 results_setting_3_pow <- read_csv("results/results_setting_3_pow.csv") %>%
   mutate(trend = case_when(trend=="seasonal" & n_wave==1 ~ "seasonal_1",
                            trend=="seasonal" & n_wave==2 ~ "seasonal_2",
@@ -100,7 +100,8 @@ pred_int <- c(alpha-z.alpha*sd,alpha+z.alpha*sd)
 
 # Introduction
 
-The following preliminary simulation study aims to explore different approaches to perform treatment-control comparisons using non-concurrent controls (NCC), where the time trend is modeled using fixed effect models, mixed effect models and splines. In the considered scenarios, continuous endpoints are assumed.
+This file contains all figures presented in Chapter 3 and Appendix A.1 in the master thesis *"Model-based Adjustments for Non-concurrent Comparisons in Platform Trials"*. 
+
 
 # Investigated models
 
@@ -120,9 +121,6 @@ The following preliminary simulation study aims to explore different approaches 
 
 - polynomial splines with knots placed according to periods
 - polynomial splines with knots placed according to calendar times
-- piecewise polynomials (discontinuous) per period
-- piecewise polynomial (discontinuous) per calendar time
-
 
 
 # SETTING 1 - 10 treatment arms
@@ -244,6 +242,8 @@ ggsave("figures/fixmodel_alpha_pow_study_arm.png", width = 10, height = 5)
 
 ## Appendix
 
+- Rows - investigated arm
+
 ```{r, fig.width=10, fig.height=15}
 ggarrange(ggplot(results_setting_1_alpha %>% filter(d2==400)) +
             geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = pred_int[1], ymax = pred_int[2]), fill = "gray84") +
@@ -273,6 +273,9 @@ ggarrange(ggplot(results_setting_1_alpha %>% filter(d2==400)) +
 
 ggsave("figures/fixmodel_alpha_pow_lambda_all_arms.png", width = 10, height = 15)
 ```
+
+
+- Rows - investigated arm
 
 ```{r, fig.width=10, fig.height=15}
 ggarrange(ggplot(results_setting_1_alpha %>% filter(lambda0==0.5)) +
@@ -305,6 +308,9 @@ ggarrange(ggplot(results_setting_1_alpha %>% filter(lambda0==0.5)) +
 
 ggsave("figures/fixmodel_alpha_pow_d_all_arms.png", width = 10, height = 15)
 ```
+
+
+- Rows - $d$
 
 ```{r, fig.width=10, fig.height=15}
 ggarrange(ggplot(results_setting_1_alpha %>% filter(d2 %in% c(0, 100, 200, 300, 400, 500) & lambda0==0.5)) +
@@ -427,6 +433,8 @@ ggsave("figures/fixmodel_cal_alpha_pow_lambda.png", width = 10, height = 6)
 
 ## Appendix
 
+- Rows - unit size
+
 ```{r, fig.width=10, fig.height=15}
 ggarrange(ggplot(results_setting_2_alpha %>% filter(study_arm==3, unit_size %in% c(25, 50, 100, 200, 300))) +
             geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = pred_int[1], ymax = pred_int[2]), fill = "gray84") +
@@ -459,6 +467,9 @@ ggarrange(ggplot(results_setting_2_alpha %>% filter(study_arm==3, unit_size %in%
 
 ggsave("figures/fixmodel_cal_alpha_pow_lambda_all_units.png", width = 10, height = 15)
 ```
+
+
+- Rows - investigated arm
 
 ```{r, fig.width=10, fig.height=10}
 ggarrange(ggplot(results_setting_2_alpha %>% filter(unit_size==100)) +
@@ -493,6 +504,8 @@ ggarrange(ggplot(results_setting_2_alpha %>% filter(unit_size==100)) +
 ggsave("figures/fixmodel_cal_alpha_pow_lambda_all_arms.png", width = 10, height = 10)
 ```
 
+
+- Rows - investigated arm
 
 ```{r, fig.width=10, fig.height=12}
 ggarrange(ggplot(results_setting_2_alpha %>% filter(lambda1==0.125)) +
@@ -532,7 +545,7 @@ ggsave("figures/fixmodel_cal_alpha_pow_unit_all_arms.png", width = 10, height = 
 ## Main text
 
 ```{r, fig.width=10, fig.height=6}
-ggarrange(ggplot(results_setting_3_alpha %>% filter(study_arm==3, unit_size==25)) +
+ggarrange(ggplot(results_setting_3_alpha %>% filter(study_arm==3, unit_size==100)) +
             geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = pred_int[1], ymax = pred_int[2]), fill = "gray84") +
             geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
             geom_point(aes(lambda1, reject_h0, color = as.factor(model))) +
@@ -544,10 +557,9 @@ ggarrange(ggplot(results_setting_3_alpha %>% filter(study_arm==3, unit_size==25)
             #coord_cartesian(ylim = c(0, 0.1)) +
             facet_grid(~ trend,
                        labeller = labeller(trend  = as_labeller(trend_names))) +
-            theme_bw() +
-            theme(plot.title = element_text(hjust = 0.5)),
+            theme_bw(),
           
-          ggplot(results_setting_3_pow %>% filter(study_arm==3, unit_size==25)) +
+          ggplot(results_setting_3_pow %>% filter(study_arm==3, unit_size==100)) +
             geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
             geom_point(aes(lambda1, reject_h0, color = as.factor(model))) +
             labs(x=TeX("$\\lambda$"), y="Power", color="Analysis approach:") +
@@ -569,8 +581,10 @@ ggsave("figures/mixmodel_cal_alpha_pow_lambda.png", width = 10, height = 6)
 
 ## Appendix
 
-```{r, fig.width=10, fig.height=6}
-ggarrange(ggplot(results_setting_3_alpha %>% filter(unit_size==25)) +
+- Rows - investigated arm
+
+```{r, fig.width=10, fig.height=10}
+ggarrange(ggplot(results_setting_3_alpha %>% filter(unit_size==100)) +
             geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = pred_int[1], ymax = pred_int[2]), fill = "gray84") +
             geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
             geom_point(aes(lambda1, reject_h0, color = as.factor(model))) +
@@ -582,10 +596,9 @@ ggarrange(ggplot(results_setting_3_alpha %>% filter(unit_size==25)) +
             #coord_cartesian(ylim = c(0, 0.1)) +
             facet_grid(study_arm ~ trend,
                        labeller = labeller(trend  = as_labeller(trend_names))) +
-            theme_bw() +
-            theme(plot.title = element_text(hjust = 0.5)),
+            theme_bw(),
           
-          ggplot(results_setting_3_pow %>% filter(unit_size==25)) +
+          ggplot(results_setting_3_pow %>% filter(unit_size==100)) +
             geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
             geom_point(aes(lambda1, reject_h0, color = as.factor(model))) +
             labs(x=TeX("$\\lambda$"), y="Power", color="Analysis approach:") +
@@ -602,9 +615,48 @@ ggarrange(ggplot(results_setting_3_alpha %>% filter(unit_size==25)) +
   bgcolor("white") + 
   border("white")
 
-ggsave("figures/mixmodel_cal_alpha_pow_lambda_all_arms.png", width = 10, height = 6)
+ggsave("figures/mixmodel_cal_alpha_pow_lambda_all_arms.png", width = 10, height = 10)
 ```
 
+
+
+- Rows - unit size
+
+
+```{r, fig.width=10, fig.height=10}
+ggarrange(ggplot(results_setting_3_alpha %>% filter(study_arm==3)) +
+            geom_rect(aes(xmin = -Inf, xmax = Inf, ymin = pred_int[1], ymax = pred_int[2]), fill = "gray84") +
+            geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
+            geom_point(aes(lambda1, reject_h0, color = as.factor(model))) +
+            labs(x=TeX("$\\lambda$"), y="Type I error", color="Analysis approach:") +
+            scale_color_manual(labels = c("Fixed - period", "Mixed - period", "Mixed (AR1) - period", 
+                                          "Mixed (AR1) - calendar", "Mixed - calendar", "Separate analysis"),
+                               values = my_palette) +
+            geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
+            #coord_cartesian(ylim = c(0, 0.1)) +
+            facet_grid(unit_size ~ trend,
+                       labeller = labeller(trend  = as_labeller(trend_names))) +
+            theme_bw(),
+          
+          ggplot(results_setting_3_pow %>% filter(study_arm==3)) +
+            geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
+            geom_point(aes(lambda1, reject_h0, color = as.factor(model))) +
+            labs(x=TeX("$\\lambda$"), y="Power", color="Analysis approach:") +
+            scale_color_manual(labels = c("Fixed - period", "Mixed - period", "Mixed (AR1) - period", 
+                                          "Mixed (AR1) - calendar", "Mixed - calendar", "Separate analysis"),
+                               values = my_palette) +
+            coord_cartesian(ylim = c(0.70, 1)) +
+            facet_grid(unit_size ~ trend,
+                       labeller = labeller(trend  = as_labeller(trend_names))) +
+            theme_bw(),
+          
+          common.legend = T, legend = "bottom",
+          nrow = 2) + 
+  bgcolor("white") + 
+  border("white")
+
+ggsave("figures/mixmodel_cal_alpha_pow_lambda_all_sizes.png", width = 10, height = 10)
+```
 
 
 # SETTING 4 - 7 treatment arms
@@ -657,6 +709,8 @@ ggsave("figures/splines_alpha_pow_lambda_trend.png", width = 10, height = 6)
 
 ## Appendix
 
+- Rows - investigated arm
+
 
 ```{r, fig.width=10, fig.height=15}
 ggarrange(ggplot(results_setting_4_alpha %>% filter(bs_degree==3, unit_size==100, model!="sepmodel")) +
@@ -690,6 +744,7 @@ ggsave("figures/splines_alpha_pow_lambda_trend_all_arms.png", width = 10, height
 ```
 
 
+- Rows - unit size
 
 
 ```{r, fig.width=10, fig.height=15}
@@ -723,6 +778,7 @@ ggarrange(ggplot(results_setting_4_alpha %>% filter(study_arm==3, bs_degree==3, 
 ggsave("figures/splines_alpha_pow_lambda_trend_all_sizes.png", width = 10, height = 15)
 ```
 
+- Rows - spline degree
 
 
 ```{r, fig.width=10, fig.height=15}
