@@ -1,18 +1,29 @@
+# Master's thesis: "Model-based Adjustments for Non-concurrent Comparisons in Platform Trials"
+# Pavla Krotka, 2023
+
+# This script contains all code to reproduce the simulations presented in Chapter 3 and Appendix A.1
+
 ###########################################################################################################################################################################################
-install.packages("NCC")
 library(NCC)
 library(tidyverse)
 
 n_sim <- 10000
 
 # Treatment effects to be used
-# power.t.test(n=250, sd=1, sig.level = 0.025, power=0.8, type = "two.sample", alternative = "one.sided") -> 0.25
+# power.t.test(n=250, sd=1, sig.level = 0.025, power=0.8, type = "two.sample", alternative = "one.sided") -> treatment effect of 0.25
 ###########################################################################################################################################################################################
 
 # SETTING 1
 
+## - 10 treatment arms
+## - Linear time trend
+## - Varying d and lambda
+## - Aim: evaluate the generalization of the model-based approach with period adjustment
+
+## Sample sizes:
 # get_ss_matrix(num_arms = 10, n_arm = 250, d = 475*(0:9))
 
+## Type I error rate:
 set.seed(1)
 setting_1_alpha <- data.frame(num_arms = 10, 
                               n_arm = 250, 
@@ -59,8 +70,7 @@ write_csv(results_setting_1_alpha, "results/results_setting_1_alpha.csv")
 
 
 
-
-
+## Power:
 set.seed(2)
 setting_1_pow <- data.frame(num_arms = 10, 
                             n_arm = 250, 
@@ -104,15 +114,19 @@ setting_1_pow <- data.frame(num_arms = 10,
 results_setting_1_pow <- sim_study_par(nsim = n_sim, scenarios = setting_1_pow, arms = c(2:10), models = c("fixmodel", "sepmodel", "poolmodel"), endpoint = "cont", perc_cores = 0.99)
 write_csv(results_setting_1_pow, "results/results_setting_1_pow.csv")
 
-
-
 ###########################################################################################################################################################################################
-
 
 # SETTING 2 
 
+## - 4 treatment arms
+## - Linear, stepwise, inverted-U and seasonal time trend
+## - Varying lambda and calendar time unit size
+## - Aim: evaluate the definition of time as calendar time intervals
+
+## Sample sizes:
 # get_ss_matrix(num_arms = 4, n_arm = 250, d = 250*(0:3))
 
+## Type I error rate:
 set.seed(3)
 setting_2_alpha <- data.frame(num_arms = 4, 
                               n_arm = 250, 
@@ -144,6 +158,8 @@ write_csv(results_setting_2_alpha, "results/results_setting_2_alpha.csv")
 
 
 
+
+## Power:
 set.seed(4)
 setting_2_pow <- data.frame(num_arms = 4, 
                             n_arm = 250, 
@@ -173,15 +189,19 @@ setting_2_pow <- data.frame(num_arms = 4,
 results_setting_2_pow <- sim_study_par(nsim = n_sim, scenarios = setting_2_pow, arms = c(2:4), models = c("fixmodel", "fixmodel_cal", "sepmodel"), endpoint = "cont", perc_cores = 0.99)
 write_csv(results_setting_2_pow, "results/results_setting_2_pow.csv")
 
-
 ###########################################################################################################################################################################################
-
 
 # SETTING 3
 
+## - 4 treatment arms
+## - Linear, stepwise, inverted-U and seasonal time trend
+## - Varying lambda and calendar time unit size
+## - Aim: evaluate the mixed models
 
+## Sample sizes:
 # get_ss_matrix(num_arms = 4, n_arm = 250, d = 250*(0:3))
 
+## Type I error rate:
 set.seed(5)
 setting_3_alpha <- data.frame(num_arms = 4, 
                               n_arm = 250, 
@@ -214,6 +234,7 @@ write_csv(results_setting_3_alpha, "results/results_setting_3_alpha.csv")
 
 
 
+## Power:
 set.seed(6)
 setting_3_pow <- data.frame(num_arms = 4, 
                             n_arm = 250, 
@@ -243,15 +264,19 @@ setting_3_pow <- data.frame(num_arms = 4,
 results_setting_3_pow <- sim_study_par(nsim = n_sim, scenarios = setting_3_pow, arms = c(2:4), models = c("fixmodel", "mixmodel", "mixmodel_AR1", "mixmodel_cal", "mixmodel_AR1_cal", "sepmodel"), endpoint = "cont", perc_cores = 0.99)
 write_csv(results_setting_3_pow, "results/results_setting_3_pow.csv")
 
-
 ###########################################################################################################################################################################################
-
 
 # SETTING 4
 
+## - 7 treatment arms
+## - Linear, stepwise, inverted-U and seasonal time trend
+## - Varying lambda, calendar time unit size and degree of the spline
+## - Aim: evaluate the spline regression
+
+## Sample sizes:
 # get_ss_matrix(num_arms = 7, n_arm = 250, d = 250*c(0,1,1,2,2,3,3))
 
-
+## Type I error rate:
 set.seed(7)
 setting_4_alpha <- data.frame(num_arms = 7, 
                               n_arm = 250, 
@@ -295,6 +320,7 @@ write_csv(results_setting_4_alpha, "results/results_setting_4_alpha.csv")
 
 
 
+## Power:
 set.seed(8)
 setting_4_pow <- data.frame(num_arms = 7, 
                             n_arm = 250, 
@@ -335,8 +361,4 @@ setting_4_pow <- data.frame(num_arms = 7,
 results_setting_4_pow <- sim_study_par(nsim = n_sim, scenarios = setting_4_pow, arms = c(2:7), models = c("splines", "splines_cal", "fixmodel", "sepmodel"), endpoint = "cont", perc_cores = 0.99)
 write_csv(results_setting_4_pow, "results/results_setting_4_pow.csv")
 
-
-
-
-
-
+###########################################################################################################################################################################################
