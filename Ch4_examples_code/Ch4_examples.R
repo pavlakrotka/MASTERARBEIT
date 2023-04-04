@@ -1,4 +1,3 @@
-devtools::install_github("pavlakrotka/NCC", build_vignettes = TRUE)
 library(NCC)
 library(tidyverse)
 library(latex2exp)
@@ -95,11 +94,9 @@ ggsave("mse.png", width = 7, height = 5)
 ##########################################################################################################
 
 data_lin <- rbind(datasim_cont(num_arms = 4, n_arm = 250, d = 250*c(0:3), theta=rep(0, 4), lambda = rep(0.15, 5), sigma = 1, trend = "linear", full = T)$Data,
-                  #datasim_cont(num_arms = 4, n_arm = 250, d = 250*c(0:3), theta=rep(0, 4), lambda = rep(0.25, 5), sigma = 1, trend = "linear", full = T)$Data,
                   datasim_cont(num_arms = 4, n_arm = 250, d = 250*c(0:3), theta=rep(0, 4), lambda = rep(0.35, 5), sigma = 1, trend = "linear", full = T)$Data)
 
 data_step <- rbind(datasim_cont(num_arms = 4, n_arm = 250, d = 250*c(0:3), theta=rep(0, 4), lambda = rep(0.15, 5), sigma = 1, trend = "stepwise_2", full = T)$Data,
-                   #datasim_cont(num_arms = 4, n_arm = 250, d = 250*c(0:3), theta=rep(0, 4), lambda = rep(0.25, 5), sigma = 1, trend = "stepwise_2", full = T)$Data,
                    datasim_cont(num_arms = 4, n_arm = 250, d = 250*c(0:3), theta=rep(0, 4), lambda = rep(0.35, 5), sigma = 1, trend = "stepwise_2", full = T)$Data)
 
 data_step <- data_step %>%
@@ -138,7 +135,7 @@ ggarrange(ggplot(data_lin) +
             theme_bw() +
             theme(plot.title = element_text(hjust = 0.5)) +
             labs(x="Patient recruitment", y=TeX("Mean response under $H_0$"), color = "N_peak", 
-                 title = TeX("Inverted-U trend with lambda=0.15 and varying N_peak")) +
+                 title = "Inverted-U trend with lambda=0.15 and varying N_peak") +
             scale_y_continuous(breaks = seq(0, 0.075, length.out=4), labels = seq(0, 0.075, length.out=4)),
           
           
@@ -147,7 +144,7 @@ ggarrange(ggplot(data_lin) +
             theme_bw() +
             theme(plot.title = element_text(hjust = 0.5)) +
             labs(x="Patient recruitment", y=TeX("Mean response under $H_0$"), color = "n_wave",
-                 title = TeX("Seasonal trend with lambda=0.15 and varying n_wave")) +
+                 title = "Seasonal trend with lambda=0.15 and varying n_wave") +
             scale_y_continuous(breaks = seq(-0.15, 0.15, length.out=5), labels = seq(-0.15, 0.15, length.out=5)),
 
           ncol = 2, nrow = 2)
