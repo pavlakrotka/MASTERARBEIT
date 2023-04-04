@@ -1,9 +1,16 @@
+# Master's thesis: "Model-based Adjustments for Non-concurrent Comparisons in Platform Trials"
+# Pavla Krotka, 2023
+
+# This script contains all code to reproduce the examples and plots from Chapter 4
+
+##########################################################################################################
 library(NCC)
 library(tidyverse)
 library(latex2exp)
 library(ggpubr)
-
 ##########################################################################################################
+
+# Section 4.2.1. - How to Analyze Platform Trial Data Utilising Non-concurrent Controls
 
 set.seed(5)
 trial_data <- datasim_cont(num_arms = 3, n_arm = 100, d = c(0, 100, 250),
@@ -32,6 +39,8 @@ splines_cont(trial_data, arm = 3, bs_degree = 3, alpha = 0.025)
 splines_cal_cont(trial_data, arm = 3, bs_degree = 3, alpha = 0.025)
 
 ##########################################################################################################
+
+# Section 4.2.2. - How to Run a Simulation Study
 
 lambda_values <- rep(seq(-0.15, 0.15, length.out = 9), 2)
 sim_scenarios <- data.frame(num_arms = 4, 
@@ -95,6 +104,8 @@ ggsave("mse.png", width = 9, height = 5)
 
 
 ##########################################################################################################
+
+# Section 4.1.1. - Data Simulation, Figure 4.2
 
 data_lin <- rbind(datasim_cont(num_arms = 4, n_arm = 250, d = 250*c(0:3), theta=rep(0, 4), lambda = rep(0.15, 5), sigma = 1, trend = "linear", full = T)$Data,
                   datasim_cont(num_arms = 4, n_arm = 250, d = 250*c(0:3), theta=rep(0, 4), lambda = rep(0.35, 5), sigma = 1, trend = "linear", full = T)$Data)
