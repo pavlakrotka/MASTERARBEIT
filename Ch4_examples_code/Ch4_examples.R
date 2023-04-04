@@ -70,8 +70,9 @@ ggplot(sim_results, aes(x=lambda0, y=reject_h0, color=model)) +
   facet_grid(~ trend) +
   geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
   labs(x="Strength of time trend", y="Type I error", color="Analysis approach") +
-  theme_bw()
-ggsave("t1e.png", width = 7, height = 5)
+  theme_bw(base_size = 15) +
+  theme(legend.text=element_text(size = 14))
+ggsave("t1e.png", width = 9, height = 5)
 
 ggplot(sim_results, aes(x=lambda0, y=bias, color=model)) +
   geom_point() +
@@ -79,16 +80,18 @@ ggplot(sim_results, aes(x=lambda0, y=bias, color=model)) +
   facet_grid(~ trend) +
   geom_hline(aes(yintercept = 0), linetype = "dotted") +
   labs(x="Strength of time trend", y="Bias", color="Analysis approach") +
-  theme_bw()
-ggsave("bias.png", width = 7, height = 5)
+  theme_bw(base_size = 15) +
+  theme(legend.text=element_text(size = 14))
+ggsave("bias.png", width = 9, height = 5)
 
 ggplot(sim_results, aes(x=lambda0, y=MSE, color=model)) +
   geom_point() +
   geom_line() +
   facet_grid(~ trend) +
   labs(x="Strength of time trend", y="MSE", color="Analysis approach") +
-  theme_bw()
-ggsave("mse.png", width = 7, height = 5)
+  theme_bw(base_size = 15) +
+  theme(legend.text=element_text(size = 14))
+ggsave("mse.png", width = 9, height = 5)
 
 
 ##########################################################################################################
@@ -120,7 +123,8 @@ ggarrange(ggplot(data_lin) +
             theme_bw() +
             theme(plot.title = element_text(hjust = 0.5)) +
             labs(x="Patient recruitment", y=TeX("Mean response under $H_0$"), color = "lambda", 
-                 title = "Linear trend with varying lambda"),
+                 title = "Linear trend with varying lambda") +
+            theme(legend.text=element_text(size = 10)),
           
           ggplot(data_step) +
             geom_point(aes(x=j, y=means_1, color=as.factor(lambda1)), size=0.6) +
@@ -128,7 +132,8 @@ ggarrange(ggplot(data_lin) +
             theme(plot.title = element_text(hjust = 0.5)) +
             labs(x="Patient recruitment", y=TeX("Mean response under $H_0$"), color = "lambda", 
                  title = "Stepwise trend with varying lambda") +
-            scale_y_continuous(breaks = unique(data_step$means), labels = unique(data_step$means)),
+            scale_y_continuous(breaks = unique(data_step$means), labels = unique(data_step$means)) +
+            theme(legend.text=element_text(size = 10)),
           
           ggplot(data_inv_u_pos) +
             geom_point(aes(x=j, y=means_1, color=as.factor(N_peak)), size=0.6) +
@@ -136,7 +141,8 @@ ggarrange(ggplot(data_lin) +
             theme(plot.title = element_text(hjust = 0.5)) +
             labs(x="Patient recruitment", y=TeX("Mean response under $H_0$"), color = "N_peak", 
                  title = "Inverted-U trend with lambda=0.15 and varying N_peak") +
-            scale_y_continuous(breaks = seq(0, 0.075, length.out=4), labels = seq(0, 0.075, length.out=4)),
+            scale_y_continuous(breaks = seq(0, 0.075, length.out=4), labels = seq(0, 0.075, length.out=4)) +
+            theme(legend.text=element_text(size = 10)),
           
           
           ggplot(data_seasonal_1) +
@@ -145,7 +151,8 @@ ggarrange(ggplot(data_lin) +
             theme(plot.title = element_text(hjust = 0.5)) +
             labs(x="Patient recruitment", y=TeX("Mean response under $H_0$"), color = "n_wave",
                  title = "Seasonal trend with lambda=0.15 and varying n_wave") +
-            scale_y_continuous(breaks = seq(-0.15, 0.15, length.out=5), labels = seq(-0.15, 0.15, length.out=5)),
+            scale_y_continuous(breaks = seq(-0.15, 0.15, length.out=5), labels = seq(-0.15, 0.15, length.out=5)) +
+            theme(legend.text=element_text(size = 10)),
 
           ncol = 2, nrow = 2)
 

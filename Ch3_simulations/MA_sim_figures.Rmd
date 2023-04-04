@@ -69,7 +69,7 @@ results_setting_4_pow <- read_csv("results/results_setting_4_pow.csv") %>%
 
 ```{r}
 # Names for trend patterns
-trend_names <- c(linear = "Linear trend", stepwise_2 = "Stepwise trend", inv_u = "Inverted-U trend", seasonal_1 = "Seasonal trend with 1 cycle", seasonal_2 = "Seasonal trend with 2 cycles")
+trend_names <- c(linear = "Linear trend", stepwise_2 = "Stepwise trend", inv_u = "Inverted-U trend", seasonal_1 = "Seasonal trend; 1 cycle", seasonal_2 = "Seasonal trend; 2 cycles")
 
 # Names for splines degrees
 degree_names <- c(`1` = "Linear splines", `2` = "Quadratic splines", `3` = "Cubic splines")
@@ -215,9 +215,12 @@ ggarrange(ggplot(results_setting_1_alpha %>% filter(study_arm==5 & d2==400)) +
             geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
             facet_grid(~ trend,
                        labeller = labeller(trend  = as_labeller(trend_names))) +
+            scale_x_continuous(labels = function(x) sub(".0+$", "", x)) +
+            scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
             #coord_cartesian(ylim = c(0, 0.3)) +
             scale_color_manual(labels = c("Fixed - period", "Pooled analysis", "Separate analysis"), values = my_palette, limits = force) +
-            theme_bw(),
+            theme_bw(base_size = 13.8) +
+            theme(legend.text=element_text(size = 13)),
           
           ggplot(results_setting_1_pow %>% filter(study_arm==5 & d2==400)) +
             geom_line(aes(lambda0, reject_h0, color=model)) +
@@ -225,9 +228,12 @@ ggarrange(ggplot(results_setting_1_alpha %>% filter(study_arm==5 & d2==400)) +
             labs(x=TeX("$\\lambda$"), y="Power", color="Analysis approach:") +
             facet_grid(~ trend,
                        labeller = labeller(trend  = as_labeller(trend_names))) +
+            scale_x_continuous(labels = function(x) sub(".0+$", "", x)) +
+            scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
             coord_cartesian(ylim = c(0.70, 1)) +
             scale_color_manual(labels = c("Fixed - period", "Pooled analysis", "Separate analysis"), values = my_palette, limits = force) +
-            theme_bw(),
+            theme_bw(base_size = 13.8) +
+            theme(legend.text=element_text(size = 13)),
           
           common.legend = T, legend = "bottom") + 
   bgcolor("white") + 
@@ -246,10 +252,11 @@ ggarrange(ggplot(results_setting_1_alpha %>% filter(study_arm==5 & lambda0==0.5)
             geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
             facet_grid(~ trend,
                        labeller = labeller(trend  = as_labeller(trend_names))) +
+            scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
             #coord_cartesian(ylim = c(0, 0.3)) +
             scale_color_manual(labels = c("Fixed - period", "Pooled analysis", "Separate analysis"), values = my_palette, limits = force) +
-            theme_bw() +
-            theme(plot.title = element_text(hjust = 0.5)),
+            theme_bw(base_size = 13.8) +
+            theme(legend.text=element_text(size = 13)),
           
           ggplot(results_setting_1_pow %>% filter(study_arm==5 & lambda0==0.5)) +
             geom_line(aes(d2, reject_h0, color=model)) +
@@ -257,10 +264,11 @@ ggarrange(ggplot(results_setting_1_alpha %>% filter(study_arm==5 & lambda0==0.5)
             labs(x=TeX("$d$"), y="Power", color="Analysis approach:") +
             facet_grid(~ trend,
                        labeller = labeller(trend  = as_labeller(trend_names))) +
+            scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
             coord_cartesian(ylim = c(0.70, 1)) +
             scale_color_manual(labels = c("Fixed - period", "Pooled analysis", "Separate analysis"), values = my_palette, limits = force) +
-            theme_bw() +
-            theme(plot.title = element_text(hjust = 0.5)),
+            theme_bw(base_size = 13.8) +
+            theme(legend.text=element_text(size = 13)),
           
           common.legend = T, legend = "bottom") + 
   bgcolor("white") + 
@@ -284,7 +292,9 @@ ggarrange(ggplot(results_setting_1_alpha %>% filter(d2==200 & lambda0==0.5)) +
             #coord_cartesian(ylim = c(0, 0.3)) +
             scale_color_manual(labels = c("Fixed - period", "Pooled analysis", "Separate analysis"), values = my_palette, limits = force) +
             scale_x_continuous(breaks = c(1:10), labels = c(1:10)) +
-            theme_bw(),
+            scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
+            theme_bw(base_size = 13.8) +
+            theme(legend.text=element_text(size = 13)),
           
           ggplot(results_setting_1_pow %>% filter(d2==200 & lambda0==0.5)) +
             geom_line(aes(study_arm, reject_h0, color=model)) +
@@ -295,7 +305,9 @@ ggarrange(ggplot(results_setting_1_alpha %>% filter(d2==200 & lambda0==0.5)) +
             coord_cartesian(ylim = c(0.70, 1)) +
             scale_color_manual(labels = c("Fixed - period", "Pooled analysis", "Separate analysis"), values = my_palette, limits = force) +
             scale_x_continuous(breaks = c(1:10), labels = c(1:10)) +
-            theme_bw(),
+            scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
+            theme_bw(base_size = 13.8) +
+            theme(legend.text=element_text(size = 13)),
           
           common.legend = T, legend = "bottom") + 
   bgcolor("white") + 
@@ -318,9 +330,12 @@ ggarrange(ggplot(results_setting_1_alpha %>% filter(d2==400)) +
             geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
             facet_grid(study_arm ~ trend,
                        labeller = labeller(trend  = as_labeller(trend_names))) +
+            scale_x_continuous(labels = function(x) sub(".0+$", "", x)) +
+            scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
             #coord_cartesian(ylim = c(0, 0.3)) +
             scale_color_manual(labels = c("Fixed - period", "Pooled analysis", "Separate analysis"), values = my_palette, limits = force) +
-            theme_bw(),
+            theme_bw(base_size = 13.8) +
+            theme(legend.text=element_text(size = 13)),
           
           ggplot(results_setting_1_pow %>% filter(d2==400)) +
             geom_line(aes(lambda0, reject_h0, color=model)) +
@@ -328,9 +343,12 @@ ggarrange(ggplot(results_setting_1_alpha %>% filter(d2==400)) +
             labs(x=TeX("$\\lambda$"), y="Power", color="Analysis approach:") +
             facet_grid(study_arm ~ trend,
                        labeller = labeller(trend  = as_labeller(trend_names))) +
+            scale_x_continuous(labels = function(x) sub(".0+$", "", x)) +
+            scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
             coord_cartesian(ylim = c(0.70, 1)) +
             scale_color_manual(labels = c("Fixed - period", "Pooled analysis", "Separate analysis"), values = my_palette, limits = force) +
-            theme_bw(),
+            theme_bw(base_size = 13.8) +
+            theme(legend.text=element_text(size = 13)),
           
           common.legend = T, legend = "bottom") + 
   bgcolor("white") + 
@@ -351,10 +369,12 @@ ggarrange(ggplot(results_setting_1_alpha %>% filter(lambda0==0.5)) +
             geom_hline(aes(yintercept = 0.025), linetype = "dotted") +
             facet_grid(study_arm ~ trend,
                        labeller = labeller(trend  = as_labeller(trend_names))) +
+            scale_x_continuous(labels = function(x) sub(".0+$", "", x)) +
+            scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
             # coord_cartesian(ylim = c(0, 0.3)) +
             scale_color_manual(labels = c("Fixed - period", "Pooled analysis", "Separate analysis"), values = my_palette, limits = force) +
-            theme_bw() +
-            theme(plot.title = element_text(hjust = 0.5)),
+            theme_bw(base_size = 13.8) +
+            theme(legend.text=element_text(size = 13)),
           
           ggplot(results_setting_1_pow %>% filter(lambda0==0.5)) +
             geom_line(aes(d2, reject_h0, color=model)) +
@@ -362,10 +382,12 @@ ggarrange(ggplot(results_setting_1_alpha %>% filter(lambda0==0.5)) +
             labs(x=TeX("$d$"), y="Power", color="Analysis approach:") +
             facet_grid(study_arm ~ trend,
                        labeller = labeller(trend  = as_labeller(trend_names))) +
+            scale_x_continuous(labels = function(x) sub(".0+$", "", x)) +
+            scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
             coord_cartesian(ylim = c(0.70, 1)) +
             scale_color_manual(labels = c("Fixed - period", "Pooled analysis", "Separate analysis"), values = my_palette, limits = force) +
-            theme_bw() +
-            theme(plot.title = element_text(hjust = 0.5)),
+            theme_bw(base_size = 13.8) +
+            theme(legend.text=element_text(size = 13)),
           
           common.legend = T, legend = "bottom") + 
   bgcolor("white") + 
@@ -389,7 +411,9 @@ ggarrange(ggplot(results_setting_1_alpha %>% filter(d2 %in% c(0, 100, 200, 300, 
             #coord_cartesian(ylim = c(0, 0.3)) +
             scale_color_manual(labels = c("Fixed - period", "Pooled analysis", "Separate analysis"), values = my_palette, limits = force) +
             scale_x_continuous(breaks = c(1:10), labels = c(1:10)) +
-            theme_bw(),
+            scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
+            theme_bw(base_size = 13.8) +
+            theme(legend.text=element_text(size = 13)),
           
           ggplot(results_setting_1_pow %>% filter(d2 %in% c(0, 100, 200, 300, 400, 500) & lambda0==0.5)) +
             geom_line(aes(study_arm, reject_h0, color=model)) +
@@ -400,7 +424,9 @@ ggarrange(ggplot(results_setting_1_alpha %>% filter(d2 %in% c(0, 100, 200, 300, 
             coord_cartesian(ylim = c(0.70, 1)) +
             scale_color_manual(labels = c("Fixed - period", "Pooled analysis", "Separate analysis"), values = my_palette, limits = force) +
             scale_x_continuous(breaks = c(1:10), labels = c(1:10)) +
-            theme_bw(),
+            scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
+            theme_bw(base_size = 13.8) +
+            theme(legend.text=element_text(size = 13)),
           
           common.legend = T, legend = "bottom") + 
   bgcolor("white") + 
@@ -437,8 +463,9 @@ ggarrange(ggplot(results_setting_2_alpha %>% filter(study_arm==3, lambda1==0.125
             #coord_cartesian(ylim = c(0, 0.1)) +
             facet_grid(~ trend,
                        labeller = labeller(trend  = as_labeller(trend_names))) +
-            theme_bw() +
-            theme(plot.title = element_text(hjust = 0.5)),
+            scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
+            theme_bw(base_size = 13.8) +
+            theme(legend.text=element_text(size = 13)),
           
           ggplot(results_setting_2_pow %>% filter(study_arm==3, lambda1==0.125)) +
             geom_line(aes(unit_size, reject_h0, color = as.factor(model))) +
@@ -448,8 +475,9 @@ ggarrange(ggplot(results_setting_2_alpha %>% filter(study_arm==3, lambda1==0.125
             coord_cartesian(ylim = c(0.70, 1)) +
             facet_grid(~ trend,
                        labeller = labeller(trend  = as_labeller(trend_names))) +
-            theme_bw() +
-            theme(plot.title = element_text(hjust = 0.5)),
+            scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
+            theme_bw(base_size = 13.8) +
+            theme(legend.text=element_text(size = 13)),
           
           common.legend = T, legend = "bottom",
           nrow = 2) + 
@@ -472,8 +500,10 @@ ggarrange(ggplot(results_setting_2_alpha %>% filter(study_arm==3, unit_size==100
             #coord_cartesian(ylim = c(0, 0.1)) +
             facet_grid( ~ trend,
                         labeller = labeller(trend  = as_labeller(trend_names))) +
-            theme_bw() +
-            theme(plot.title = element_text(hjust = 0.5)),
+            scale_x_continuous(labels = function(x) sub(".0+$", "", x)) +
+            scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
+            theme_bw(base_size = 13.8) +
+            theme(legend.text=element_text(size = 13)),
           
           ggplot(results_setting_2_pow %>% filter(study_arm==3, unit_size==100)) +
             geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
@@ -483,8 +513,10 @@ ggarrange(ggplot(results_setting_2_alpha %>% filter(study_arm==3, unit_size==100
             coord_cartesian(ylim = c(0.70, 1)) +
             facet_grid( ~ trend,
                         labeller = labeller(trend  = as_labeller(trend_names))) +
-            theme_bw() +
-            theme(plot.title = element_text(hjust = 0.5)),
+            scale_x_continuous(labels = function(x) sub(".0+$", "", x)) +
+            scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
+            theme_bw(base_size = 13.8) +
+            theme(legend.text=element_text(size = 13)),
           
           common.legend = T, legend = "bottom",
           nrow = 2) + 
@@ -511,8 +543,10 @@ ggarrange(ggplot(results_setting_2_alpha %>% filter(study_arm==3, unit_size %in%
             #coord_cartesian(ylim = c(0, 0.1)) +
             facet_grid(unit_size ~ trend,
                        labeller = labeller(trend  = as_labeller(trend_names))) +
-            theme_bw() +
-            theme(plot.title = element_text(hjust = 0.5)),
+            scale_x_continuous(labels = function(x) sub(".0+$", "", x)) +
+            scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
+            theme_bw(base_size = 13.8) +
+            theme(legend.text=element_text(size = 13)),
           
           ggplot(results_setting_2_pow %>% filter(study_arm==3, unit_size %in% c(25, 50, 100, 200, 300))) +
             geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
@@ -522,8 +556,10 @@ ggarrange(ggplot(results_setting_2_alpha %>% filter(study_arm==3, unit_size %in%
             coord_cartesian(ylim = c(0.70, 1)) +
             facet_grid(unit_size ~ trend,
                        labeller = labeller(trend  = as_labeller(trend_names))) +
-            theme_bw() +
-            theme(plot.title = element_text(hjust = 0.5)),
+            scale_x_continuous(labels = function(x) sub(".0+$", "", x)) +
+            scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
+            theme_bw(base_size = 13.8) +
+            theme(legend.text=element_text(size = 13)),
           
           common.legend = T, legend = "bottom",
           nrow = 2) + 
@@ -536,7 +572,7 @@ ggsave("figures/fixmodel_cal_alpha_pow_lambda_all_units.png", width = 10, height
 
 - Rows - investigated arm
 
-```{r, fig.width=10, fig.height=10}
+```{r, fig.width=10, fig.height=12}
 ggarrange(ggplot(results_setting_2_alpha %>% filter(unit_size==100)) +
             annotate("rect", xmin = -Inf, xmax = Inf, ymin = pred_int[1], ymax = pred_int[2], fill = "gray54", alpha = 0.4) +
             geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
@@ -547,8 +583,10 @@ ggarrange(ggplot(results_setting_2_alpha %>% filter(unit_size==100)) +
             #coord_cartesian(ylim = c(0, 0.1)) +
             facet_grid(study_arm ~ trend,
                        labeller = labeller(trend  = as_labeller(trend_names))) +
-            theme_bw() +
-            theme(plot.title = element_text(hjust = 0.5)),
+            scale_x_continuous(labels = function(x) sub(".0+$", "", x)) +
+            scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
+            theme_bw(base_size = 13.8) +
+            theme(legend.text=element_text(size = 13)),
           
           ggplot(results_setting_2_pow %>% filter(unit_size==100)) +
             geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
@@ -558,15 +596,17 @@ ggarrange(ggplot(results_setting_2_alpha %>% filter(unit_size==100)) +
             coord_cartesian(ylim = c(0.70, 1)) +
             facet_grid(study_arm ~ trend,
                        labeller = labeller(trend  = as_labeller(trend_names))) +
-            theme_bw() +
-            theme(plot.title = element_text(hjust = 0.5)),
+            scale_x_continuous(labels = function(x) sub(".0+$", "", x)) +
+            scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
+            theme_bw(base_size = 13.8) +
+            theme(legend.text=element_text(size = 13)),
           
           common.legend = T, legend = "bottom",
           nrow = 2) + 
   bgcolor("white") + 
   border("white")
 
-ggsave("figures/fixmodel_cal_alpha_pow_lambda_all_arms.png", width = 10, height = 10)
+ggsave("figures/fixmodel_cal_alpha_pow_lambda_all_arms.png", width = 10, height = 12)
 ```
 
 
@@ -583,8 +623,10 @@ ggarrange(ggplot(results_setting_2_alpha %>% filter(lambda1==0.125)) +
             #coord_cartesian(ylim = c(0, 0.1)) +
             facet_grid(study_arm ~ trend,
                        labeller = labeller(trend  = as_labeller(trend_names))) +
-            theme_bw() +
-            theme(plot.title = element_text(hjust = 0.5)),
+            scale_x_continuous(labels = function(x) sub(".0+$", "", x)) +
+            scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
+            theme_bw(base_size = 13.8) +
+            theme(legend.text=element_text(size = 13)),
           
           ggplot(results_setting_2_pow %>% filter(lambda1==0.125)) +
             geom_line(aes(unit_size, reject_h0, color = as.factor(model))) +
@@ -594,8 +636,10 @@ ggarrange(ggplot(results_setting_2_alpha %>% filter(lambda1==0.125)) +
             coord_cartesian(ylim = c(0.70, 1)) +
             facet_grid(study_arm ~ trend,
                        labeller = labeller(trend  = as_labeller(trend_names))) +
-            theme_bw() +
-            theme(plot.title = element_text(hjust = 0.5)),
+            scale_x_continuous(labels = function(x) sub(".0+$", "", x)) +
+            scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
+            theme_bw(base_size = 13.8) +
+            theme(legend.text=element_text(size = 13)),
           
           common.legend = T, legend = "bottom",
           nrow = 2) + 
@@ -622,7 +666,10 @@ ggarrange(ggplot(results_setting_3_alpha %>% filter(study_arm==3, unit_size==100
             #coord_cartesian(ylim = c(0, 0.1)) +
             facet_grid(~ trend,
                        labeller = labeller(trend  = as_labeller(trend_names))) +
-            theme_bw(),
+            scale_x_continuous(labels = function(x) sub(".0+$", "", x)) +
+            scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
+            theme_bw(base_size = 13.8) +
+            theme(legend.text=element_text(size = 13)),
           
           ggplot(results_setting_3_pow %>% filter(study_arm==3, unit_size==100)) +
             geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
@@ -634,21 +681,24 @@ ggarrange(ggplot(results_setting_3_alpha %>% filter(study_arm==3, unit_size==100
             coord_cartesian(ylim = c(0.70, 1)) +
             facet_grid(~ trend,
                        labeller = labeller(trend  = as_labeller(trend_names))) +
-            theme_bw(),
+            scale_x_continuous(labels = function(x) sub(".0+$", "", x)) +
+            scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
+            theme_bw(base_size = 13.8) +
+            theme(legend.text=element_text(size = 13)),
           
           common.legend = T, legend = "bottom",
           nrow = 2) + 
   bgcolor("white") + 
   border("white")
 
-ggsave("figures/mixmodel_cal_alpha_pow_lambda.png", width = 10, height = 6)
+ggsave("figures/mixmodel_alpha_pow_lambda.png", width = 10, height = 6)
 ```
 
 ## Appendix
 
 - Rows - investigated arm
 
-```{r, fig.width=10, fig.height=10}
+```{r, fig.width=10, fig.height=12}
 ggarrange(ggplot(results_setting_3_alpha %>% filter(unit_size==100)) +
             annotate("rect", xmin = -Inf, xmax = Inf, ymin = pred_int[1], ymax = pred_int[2], fill = "gray54", alpha = 0.4) +
             geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
@@ -661,7 +711,10 @@ ggarrange(ggplot(results_setting_3_alpha %>% filter(unit_size==100)) +
             #coord_cartesian(ylim = c(0, 0.1)) +
             facet_grid(study_arm ~ trend,
                        labeller = labeller(trend  = as_labeller(trend_names))) +
-            theme_bw(),
+            scale_x_continuous(labels = function(x) sub(".0+$", "", x)) +
+            scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
+            theme_bw(base_size = 13.8) +
+            theme(legend.text=element_text(size = 13)),
           
           ggplot(results_setting_3_pow %>% filter(unit_size==100)) +
             geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
@@ -673,14 +726,17 @@ ggarrange(ggplot(results_setting_3_alpha %>% filter(unit_size==100)) +
             coord_cartesian(ylim = c(0.70, 1)) +
             facet_grid(study_arm ~ trend,
                        labeller = labeller(trend  = as_labeller(trend_names))) +
-            theme_bw(),
+            scale_x_continuous(labels = function(x) sub(".0+$", "", x)) +
+            scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
+            theme_bw(base_size = 13.8) +
+            theme(legend.text=element_text(size = 13)),
           
           common.legend = T, legend = "bottom",
           nrow = 2) + 
   bgcolor("white") + 
   border("white")
 
-ggsave("figures/mixmodel_cal_alpha_pow_lambda_all_arms.png", width = 10, height = 10)
+ggsave("figures/mixmodel_alpha_pow_lambda_all_arms.png", width = 10, height = 12)
 ```
 
 
@@ -688,7 +744,7 @@ ggsave("figures/mixmodel_cal_alpha_pow_lambda_all_arms.png", width = 10, height 
 - Rows - unit size
 
 
-```{r, fig.width=10, fig.height=10}
+```{r, fig.width=10, fig.height=12}
 ggarrange(ggplot(results_setting_3_alpha %>% filter(study_arm==3)) +
             annotate("rect", xmin = -Inf, xmax = Inf, ymin = pred_int[1], ymax = pred_int[2], fill = "gray54", alpha = 0.4) +
             geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
@@ -701,7 +757,10 @@ ggarrange(ggplot(results_setting_3_alpha %>% filter(study_arm==3)) +
             #coord_cartesian(ylim = c(0, 0.1)) +
             facet_grid(unit_size ~ trend,
                        labeller = labeller(trend  = as_labeller(trend_names))) +
-            theme_bw(),
+            scale_x_continuous(labels = function(x) sub(".0+$", "", x)) +
+            scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
+            theme_bw(base_size = 13.8) +
+            theme(legend.text=element_text(size = 13)),
           
           ggplot(results_setting_3_pow %>% filter(study_arm==3)) +
             geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
@@ -713,14 +772,17 @@ ggarrange(ggplot(results_setting_3_alpha %>% filter(study_arm==3)) +
             coord_cartesian(ylim = c(0.70, 1)) +
             facet_grid(unit_size ~ trend,
                        labeller = labeller(trend  = as_labeller(trend_names))) +
-            theme_bw(),
+            scale_x_continuous(labels = function(x) sub(".0+$", "", x)) +
+            scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
+            theme_bw(base_size = 13.8) +
+            theme(legend.text=element_text(size = 13)),
           
           common.legend = T, legend = "bottom",
           nrow = 2) + 
   bgcolor("white") + 
   border("white")
 
-ggsave("figures/mixmodel_cal_alpha_pow_lambda_all_sizes.png", width = 10, height = 10)
+ggsave("figures/mixmodel_alpha_pow_lambda_all_units.png", width = 10, height = 12)
 ```
 
 
@@ -750,7 +812,10 @@ ggarrange(ggplot(results_setting_4_alpha %>% filter(study_arm==3, bs_degree==3, 
             #coord_cartesian(ylim = c(0, 0.1)) +
             facet_grid(~ trend,
                        labeller = labeller(trend = as_labeller(trend_names))) +
-            theme_bw(),
+            scale_x_continuous(labels = function(x) sub(".0+$", "", x)) +
+            scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
+            theme_bw(base_size = 13.8) +
+            theme(legend.text=element_text(size = 13)),
           
           ggplot(results_setting_4_pow %>% filter(study_arm==3, bs_degree==3, unit_size==100)) +
             geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
@@ -760,7 +825,10 @@ ggarrange(ggplot(results_setting_4_alpha %>% filter(study_arm==3, bs_degree==3, 
             coord_cartesian(ylim = c(0.70, 1)) +
             facet_grid(~ trend,
                        labeller = labeller(trend  = as_labeller(trend_names))) +
-            theme_bw(),
+            scale_x_continuous(labels = function(x) sub(".0+$", "", x)) +
+            scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
+            theme_bw(base_size = 13.8) +
+            theme(legend.text=element_text(size = 13)),
           
           common.legend = T, legend = "bottom",
           nrow = 2) +
@@ -788,7 +856,10 @@ ggarrange(ggplot(results_setting_4_alpha %>% filter(bs_degree==3, unit_size==100
             #coord_cartesian(ylim = c(0, 0.1)) +
             facet_grid(study_arm ~ trend,
                        labeller = labeller(trend = as_labeller(trend_names))) +
-            theme_bw(),
+            scale_x_continuous(labels = function(x) sub(".0+$", "", x)) +
+            scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
+            theme_bw(base_size = 13.8) +
+            theme(legend.text=element_text(size = 13)),
           
           ggplot(results_setting_4_pow %>% filter(bs_degree==3, unit_size==100)) +
             geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
@@ -798,7 +869,10 @@ ggarrange(ggplot(results_setting_4_alpha %>% filter(bs_degree==3, unit_size==100
             coord_cartesian(ylim = c(0.70, 1)) +
             facet_grid(study_arm ~ trend,
                        labeller = labeller(trend  = as_labeller(trend_names))) +
-            theme_bw(),
+            scale_x_continuous(labels = function(x) sub(".0+$", "", x)) +
+            scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
+            theme_bw(base_size = 13.8) +
+            theme(legend.text=element_text(size = 13)),
           
           common.legend = T, legend = "bottom",
           nrow = 2) +
@@ -812,7 +886,7 @@ ggsave("figures/splines_alpha_pow_lambda_trend_all_arms.png", width = 10, height
 - Rows - unit size
 
 
-```{r, fig.width=10, fig.height=15}
+```{r, fig.width=10, fig.height=12}
 ggarrange(ggplot(results_setting_4_alpha %>% filter(study_arm==3, bs_degree==3)) +
             annotate("rect", xmin = -Inf, xmax = Inf, ymin = pred_int[1], ymax = pred_int[2], fill = "gray54", alpha = 0.4) +
             geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
@@ -823,7 +897,10 @@ ggarrange(ggplot(results_setting_4_alpha %>% filter(study_arm==3, bs_degree==3))
             #coord_cartesian(ylim = c(0, 0.1)) +
             facet_grid(unit_size ~ trend,
                        labeller = labeller(trend = as_labeller(trend_names))) +
-            theme_bw(),
+            scale_x_continuous(labels = function(x) sub(".0+$", "", x)) +
+            scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
+            theme_bw(base_size = 13.8) +
+            theme(legend.text=element_text(size = 13)),
           
           ggplot(results_setting_4_pow %>% filter(study_arm==3, bs_degree==3)) +
             geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
@@ -833,20 +910,23 @@ ggarrange(ggplot(results_setting_4_alpha %>% filter(study_arm==3, bs_degree==3))
             coord_cartesian(ylim = c(0.70, 1)) +
             facet_grid(unit_size ~ trend,
                        labeller = labeller(trend  = as_labeller(trend_names))) +
-            theme_bw(),
+            scale_x_continuous(labels = function(x) sub(".0+$", "", x)) +
+            scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
+            theme_bw(base_size = 13.8) +
+            theme(legend.text=element_text(size = 13)),
           
           common.legend = T, legend = "bottom",
           nrow = 2) +
   bgcolor("white") +
   border("white")
 
-ggsave("figures/splines_alpha_pow_lambda_trend_all_sizes.png", width = 10, height = 15)
+ggsave("figures/splines_alpha_pow_lambda_trend_all_units.png", width = 10, height = 12)
 ```
 
 - Rows - spline degree
 
 
-```{r, fig.width=10, fig.height=15}
+```{r, fig.width=10, fig.height=12}
 ggarrange(ggplot(results_setting_4_alpha %>% filter(study_arm==3, unit_size==100)) +
             annotate("rect", xmin = -Inf, xmax = Inf, ymin = pred_int[1], ymax = pred_int[2], fill = "gray54", alpha = 0.4) +
             geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
@@ -858,7 +938,10 @@ ggarrange(ggplot(results_setting_4_alpha %>% filter(study_arm==3, unit_size==100
             facet_grid(bs_degree ~ trend,
                        labeller = labeller(trend = as_labeller(trend_names),
                                            bs_degree = as_labeller(degree_names))) +
-            theme_bw(),
+            scale_x_continuous(labels = function(x) sub(".0+$", "", x)) +
+            scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
+            theme_bw(base_size = 13.8) +
+            theme(legend.text=element_text(size = 13)),
           
           ggplot(results_setting_4_pow %>% filter(study_arm==3, unit_size==100)) +
             geom_line(aes(lambda1, reject_h0, color = as.factor(model))) +
@@ -869,14 +952,17 @@ ggarrange(ggplot(results_setting_4_alpha %>% filter(study_arm==3, unit_size==100
             facet_grid(bs_degree ~ trend,
                        labeller = labeller(trend  = as_labeller(trend_names),
                                            bs_degree = as_labeller(degree_names))) +
-            theme_bw(),
-          
+            scale_x_continuous(labels = function(x) sub(".0+$", "", x)) +
+            scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
+            theme_bw(base_size = 13.8) +
+            theme(legend.text=element_text(size = 13)),
+           
           common.legend = T, legend = "bottom",
           nrow = 2) +
   bgcolor("white") +
   border("white")
 
-ggsave("figures/splines_alpha_pow_lambda_trend_all_degrees.png", width = 10, height = 15)
+ggsave("figures/splines_alpha_pow_lambda_trend_all_degrees.png", width = 10, height = 12)
 ```
 
 
