@@ -175,7 +175,7 @@ scenario_iv_eq_pow <- data.frame(num_arms = 7,
   mutate(timetrend = ifelse(lambda0==lambda1 & lambda1==lambda2 & lambda1==lambda3, "EQ", "DIFF"),
          hypothesis = ifelse(theta2==0 & theta3==0, "H0", "H1"))
 
-results_iv_eq_pow <- sim_study_par(nsim = n_sim, scenarios = scenario_iv_eq_pow, models = c("splines", "splines_cal", "fixmodel", "fixmodel_cal", "mixmodel", "mixmodel_cal", "mixmodel_AR1", "mixmodel_AR1_cal", "piecewise", "piecewise_cal", "sepmodel", "poolmodel"), endpoint = "cont", perc_cores = 0.99)
+results_iv_eq_pow <- sim_study_par(nsim = n_sim, scenarios = scenario_iv_eq_pow, arms = c(2:7), models = c("splines", "splines_cal", "fixmodel", "fixmodel_cal", "mixmodel", "mixmodel_cal", "mixmodel_AR1", "mixmodel_AR1_cal", "piecewise", "piecewise_cal", "sepmodel", "poolmodel"), endpoint = "cont", perc_cores = 0.99)
 write_csv(results_iv_eq_pow, "results/results_iv_eq_pow.csv")
 
 
