@@ -88,11 +88,12 @@ my_palette = c("fixmodel" = "brown3",
 #show_col(my_palette)
 
 # Prediction interval for T1E
-alpha <- 0.025
+p <- 0.025
+alpha <- 0.05
 nsim <- 10000
-sd <- sqrt(alpha*(1-alpha)/nsim)
-z.alpha <- qnorm(1-alpha,0,1)
-pred_int <- c(alpha-z.alpha*sd,alpha+z.alpha*sd)
+sd <- sqrt(p*(1-p)/nsim)
+z.alpha <- qnorm(1-alpha/2,0,1)
+pred_int <- c(p-z.alpha*sd,p+z.alpha*sd)
 #pred_int
 ```
 
