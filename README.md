@@ -12,9 +12,9 @@ The folder *Ch3_simulations* contains all code to reproduce the results and figu
 
 ## Chapter 4
 
-The folder *Ch4_examples_code* contains examples of how to use the `NCC` R-package (see [CRAN](https://CRAN.R-project.org/package=NCC) and [package website](https://pavlakrotka.github.io/NCC/)) as shown in Chapter 4:
+The folder *Ch4_examples_code* contains examples of how to use the `NCC` R-package (see [CRAN](https://CRAN.R-project.org/package=NCC) and [package website](https://pavlakrotka.github.io/NCC/)), as shown in Chapter 4:
 
-- **Ch4_examples.R:** R script with all examples presented in Sections 4.2., also containing the code for all plots shown in Chapter 4.
+- **Ch4_examples.R:** R script with all examples presented in Section 4.2., also containing the code for all plots shown in Chapter 4.
 
 ## Presentation slides
 
