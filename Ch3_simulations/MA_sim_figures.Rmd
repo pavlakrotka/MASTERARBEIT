@@ -707,7 +707,6 @@ ggarrange(ggplot(results_setting_2_alpha %>% filter(lambda1==0.125)) +
             #coord_cartesian(ylim = c(0, 0.1)) +
             facet_grid(study_arm ~ trend,
                        labeller = labeller(trend  = as_labeller(trend_names))) +
-            scale_x_continuous(labels = function(x) sub(".0+$", "", x)) +
             scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
             theme_bw(base_size = 13.8) +
             theme(legend.text=element_text(size = 13)),
@@ -720,7 +719,6 @@ ggarrange(ggplot(results_setting_2_alpha %>% filter(lambda1==0.125)) +
             coord_cartesian(ylim = c(0.70, 1)) +
             facet_grid(study_arm ~ trend,
                        labeller = labeller(trend  = as_labeller(trend_names))) +
-            scale_x_continuous(labels = function(x) sub(".0+$", "", x)) +
             scale_y_continuous(labels = function(x) sub(".0+$", "", x)) +
             theme_bw(base_size = 13.8) +
             theme(legend.text=element_text(size = 13)),
