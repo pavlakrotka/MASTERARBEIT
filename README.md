@@ -1,6 +1,6 @@
 # Master's thesis: "Model-based Adjustments for Non-concurrent Comparisons in Platform Trials"
 
-This is an accompanying repository for the master's thesis *"Model-based adjustments for non-concurrent comparisons in platform trials"* (Pavla Krotka, 2023).
+This is an accompanying repository for the master's thesis *"Model-based Adjustments for Non-concurrent Comparisons in Platform Trials"* (Pavla Krotka, 2023).
 
 ## Chapter 3 & Appendix A.1
 
