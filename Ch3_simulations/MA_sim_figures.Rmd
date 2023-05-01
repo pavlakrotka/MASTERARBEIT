@@ -100,7 +100,7 @@ pred_int <- c(p-z.alpha*sd,p+z.alpha*sd)
 
 # Introduction
 
-This file contains all code to reproduce the figures presented in Chapter 3 and Plots from Appendix A.1 in the master's thesis *"Model-based Adjustments for Non-concurrent Comparisons in Platform Trials"*.
+This file contains all code to reproduce the figures presented in Chapter 3, as well as plots from Appendix A.1 in the master's thesis *"Model-based Adjustments for Non-concurrent Comparisons in Platform Trials"*.
 
 
 # Investigated models
