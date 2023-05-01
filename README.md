@@ -8,7 +8,7 @@ The folder *Ch3_simulations* contains all code to reproduce the results and figu
 
 - **MA_simscript.R:** Simulation script with all simulation scenarios considered in the thesis. Running this code saves the corresponding results as .csv files in the folder *results*.
 
-- **MA_sim_figures.Rmd:** R Markdown file for generating all figures presented in Chapter 3 and Appendix A.1. After knitting this file, the figures are save in the *figures* folder and the corresponding HTML document is generated.
+- **MA_sim_figures.Rmd:** R Markdown file for generating all figures presented in Chapter 3 and Appendix A.1. After knitting this file, the figures are saved in the *figures* folder and the corresponding HTML document is generated.
 
 ## Chapter 4
 
